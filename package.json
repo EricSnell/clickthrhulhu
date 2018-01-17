@@ -15,5 +15,12 @@
   "bugs": {
     "url": "https://github.com/EricSnell/clickthrhulhu/issues"
   },
-  "homepage": "https://github.com/EricSnell/clickthrhulhu#readme"
+  "homepage": "https://github.com/EricSnell/clickthrhulhu#readme",
+  "devDependencies": {
+    "autoprefixer": "^7.2.5",
+    "concat": "^1.0.3",
+    "node-sass": "^4.7.2",
+    "npm-run-all": "^4.1.2",
+    "postcss-cli": "^4.1.1"
+  }
 }
