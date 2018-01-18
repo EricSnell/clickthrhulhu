@@ -1,0 +1,213 @@
+html, body {
+  box-sizing: border-box;
+  height: 100%;
+  overflow: hidden; /* hide scrollbar */
+  background: linear-gradient(to right bottom, #2D3A62, #55375E);;
+  -webkit-font-smoothing: antialiased;
+  font-family: Roboto, Helvetica, Arial, Sans-serif;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+#container {
+  max-width: 1000px;
+  min-width: 300px;
+  margin: 0 auto;
+  padding: 30px 0;
+}
+
+header {
+  margin-bottom: 20px;
+}
+
+#logo-container {
+  text-align: center;
+  width: 135px;
+  margin: 0 auto;
+}
+
+#logo-container .cthulhu {
+  fill: #eeeeee !important;
+  transition: 0.5s fill;
+}
+
+
+h1 {
+  text-align: center;
+  font-family: 'Happy Monkey', cursive;
+  color: #eee;
+  margin: 5px auto 0;
+  font-size: 40px;
+  font-weight: 700;
+  letter-spacing: 6px;
+  text-transform: uppercase;
+}
+
+p {
+  margin: 0 auto 25px;
+  text-align: center;
+  max-width: 385px;
+  color: #717a8a;
+  line-height: 1.5;
+}
+
+#app-input {
+  max-width: 900px;
+  margin: 0 auto;
+  border: 3px solid #e6e6e7;
+  border-radius: 6px;
+  background: #fffeff;
+  padding: 0px 25px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+#app-input_options {
+  position: relative;
+  padding: 20px 0;
+}
+
+#options-inner {
+  font-size: 20px;
+  text-align: center;
+  color: #333;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  position: relative;
+  transition: all 0.5s;
+}
+
+label:hover {
+  cursor: pointer;
+}
+
+label[for=promocodes-dropdown] {
+  margin-left: 20px;
+}
+
+#promocodes-dropdown {
+  margin-right: 20px;
+}
+
+#variables-input {
+  text-transform: uppercase;
+  font-size: 18px;
+/*   width: 150px; */
+}
+
+#options_variables {
+  position: relative;
+}
+
+#variables-input + #variables-input_help {
+  font-size: 14px;
+  position: absolute;
+  color: #fff;
+  background: #333;
+  border-radius: 8px;
+  width: 160px;
+  right: 5px;
+  top: -10px;
+  opacity: 0;
+  transition: all 0.3s;
+}
+
+#variables-input:focus + #variables-input_help {
+  opacity: 1;
+  top: -20px;
+}
+
+#code-container {
+  border-radius: 5px;
+  overflow: hidden;
+  position: relative;
+}
+
+#loader {
+  position: absolute;
+  z-index: 100;
+  width: 150px;
+  display: none;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+#code {
+  height: 250px;
+}
+
+.CodeMirror {
+  line-height: 1.5;
+  font-size: 16px;
+  border: 3px solid #222C31;
+  position: relative;
+  transition: opacity 1s;
+  opacity: 1;
+}
+
+.CodeMirror-linenumbers {
+  border-right: 1px solid #4b5960;
+  padding-right: 20px;
+  margin-right: 10px;
+}
+
+.CodeMirror-lines {
+  padding: 10px 0;
+}
+
+.CodeMirror-selected {
+  background: blue;
+}
+
+.CodeMirror-focused {
+  border: 3px solid #56707c;
+}
+
+#buttons {
+  padding: 20px 0;
+}
+
+button {
+  display: block;
+  margin: 0 auto;
+  background: #03de75;
+  border: none;
+  padding: 21px 40px;
+  color: #fff;
+  text-transform: uppercase;
+  border-radius: 3px;
+  font-size: 20px;
+  letter-spacing: 1.4px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: box-shadow 0.1s, transform 0.1s, opacity 0.5s;
+  opacity: 1;
+  position: relative;
+}
+
+button:hover {
+  box-shadow: 0px 3px 3px rgba(0, 0, 0, .3);
+  transform: scale(1.05);
+}
+
+button:focus {
+  outline: 0;
+}
+
+button:active {
+  transform: scale(1);
+  box-shadow: 0px 1px 1px rgba(0, 0, 0, .3);
+}
+
+#reset-btn {
+  display: none;
+  background-color: #FFC506;
+}
+
+
