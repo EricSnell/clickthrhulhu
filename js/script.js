@@ -67,7 +67,7 @@
           'TESTGROUP',
           'CONTACTS_LIST.EMAIL_ADDRESS_',
           'ENDDATE',
-        ].concat(this.state.variables)
+        ].concat(this.state.variables),
       });
     },
 
@@ -141,7 +141,7 @@
         const variables = this.varString();
 
         clickthrough += barcodes + promocodes + variables;
-      } 
+      }
       clickthrough += ')}';
       return clickthrough;
     },
