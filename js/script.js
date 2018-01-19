@@ -31,14 +31,14 @@
         autoFocus: true,
       });
       this.$codeMirror = document.getElementsByClassName('CodeMirror')[0];
-      this.$app = document.getElementById('app-input');
-      this.$btn = document.getElementById('btn');
+      this.$app = document.getElementById('app');
+      this.$btn = document.getElementById('btn--go');
       this.$loader = document.getElementById('loader');
-      this.$resetBtn = document.getElementById('reset-btn');
-      this.$options = document.getElementById('options-inner');
-      this.$barcodes = document.getElementById('barcodes-dropdown');
-      this.$promocodes = document.getElementById('promocodes-dropdown');
-      this.$vars = document.getElementById('variables-input');
+      this.$resetBtn = document.getElementById('btn--reset');
+      this.$options = document.getElementById('options__inner');
+      this.$barcodes = document.getElementById('options__barcodes-dropdown');
+      this.$promocodes = document.getElementById('options__promocodes-dropdown');
+      this.$vars = document.getElementById('options__variables-input');
       this.$logo = Array.from(document.getElementsByClassName('cthulhu'));
     },
 
