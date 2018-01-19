@@ -1,0 +1,23 @@
+
+#container {
+  max-width: 100rem;
+  min-width: 30rem;
+  margin: 0 auto;
+  padding: 3rem 0;
+}
+
+#header {
+  margin-bottom: 2rem;
+}
+
+#app {
+  max-width: 90rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: #fffeff;
+  margin: 0 auto;
+  padding: 0px 2.5rem;
+  border: 3px solid #e6e6e7;
+  border-radius: 6px;
+}
