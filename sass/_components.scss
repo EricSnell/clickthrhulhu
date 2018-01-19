@@ -1,9 +1,5 @@
 
-#logo {
-  text-align: center;
-  width: 13.5rem;
-  margin: 0 auto;
-
+#header {
   &__text {
     text-align: center;
     font-family: 'Happy Monkey', cursive;
@@ -14,6 +10,12 @@
     letter-spacing: 6px;
     text-transform: uppercase;
   }
+}
+
+#logo {
+  text-align: center;
+  width: 13.5rem;
+  margin: 0 auto;
 
   .cthulhu {
     fill: #eeeeee !important;
