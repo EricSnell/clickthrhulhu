@@ -2,8 +2,8 @@ html, body {
   box-sizing: border-box;
   height: 100%;
   overflow: hidden; /* hide scrollbar */
-  background: linear-gradient(to right bottom, #2D3A62, #55375E);;
   -webkit-font-smoothing: antialiased;
+  background: linear-gradient(to right bottom, #2D3A62, #55375E);;
   font-family: Roboto, Helvetica, Arial, Sans-serif;
 }
 
@@ -22,19 +22,19 @@ header {
   margin-bottom: 20px;
 }
 
-#logo-container {
+#logo {
   text-align: center;
   width: 135px;
   margin: 0 auto;
 }
 
-#logo-container .cthulhu {
+#logo .cthulhu {
   fill: #eeeeee !important;
   transition: 0.5s fill;
 }
 
 
-h1 {
+#logo__text {
   text-align: center;
   font-family: 'Happy Monkey', cursive;
   color: #eee;
@@ -53,7 +53,7 @@ p {
   line-height: 1.5;
 }
 
-#app-input {
+#app {
   max-width: 900px;
   margin: 0 auto;
   border: 3px solid #e6e6e7;
@@ -65,12 +65,12 @@ p {
   justify-content: center;
 }
 
-#app-input_options {
+#options {
   position: relative;
   padding: 20px 0;
 }
 
-#options-inner {
+#options__inner {
   font-size: 20px;
   text-align: center;
   color: #333;
@@ -86,25 +86,25 @@ label:hover {
   cursor: pointer;
 }
 
-label[for=promocodes-dropdown] {
+label[for=options__promocodes-dropdown] {
   margin-left: 20px;
 }
 
-#promocodes-dropdown {
+#options__promocodes-dropdown {
   margin-right: 20px;
 }
 
-#variables-input {
+#options__variables-input {
   text-transform: uppercase;
   font-size: 18px;
 /*   width: 150px; */
 }
 
-#options_variables {
+#options__variables {
   position: relative;
 }
 
-#variables-input + #variables-input_help {
+#options__variables-input + #options__variables-help {
   font-size: 14px;
   position: absolute;
   color: #fff;
@@ -117,7 +117,7 @@ label[for=promocodes-dropdown] {
   transition: all 0.3s;
 }
 
-#variables-input:focus + #variables-input_help {
+#options__variables-input:focus + #options__variables-help {
   opacity: 1;
   top: -20px;
 }
@@ -173,7 +173,7 @@ label[for=promocodes-dropdown] {
   padding: 20px 0;
 }
 
-button {
+.btn {
   display: block;
   margin: 0 auto;
   background: #03de75;
@@ -191,21 +191,21 @@ button {
   position: relative;
 }
 
-button:hover {
+.btn:hover {
   box-shadow: 0px 3px 3px rgba(0, 0, 0, .3);
-  transform: scale(1.05);
+
 }
 
-button:focus {
+.btn:focus {
   outline: 0;
 }
 
-button:active {
+.btn:active {
   transform: scale(1);
   box-shadow: 0px 1px 1px rgba(0, 0, 0, .3);
 }
 
-#reset-btn {
+#btn--reset {
   display: none;
   background-color: #FFC506;
 }
