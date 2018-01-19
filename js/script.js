@@ -1,20 +1,16 @@
-(function() {
-
+(function () {
   const app = {
-
     state: {
       html: null,
       barcodes: null,
       promocodes: null,
       variables: [],
     },
-
     init() {
       this.cacheDOM();
       this.bindEvents();
       this.reset();
-    },  
-
+    },
     cacheDOM() {
       this.$code = CodeMirror.fromTextArea(document.getElementById("code"), {
         lineNumbers: true,			
@@ -210,8 +206,8 @@
 
     reset() {
       this.$resetBtn.style.display = 'none';
-      this.$options.style.opacity ='1';
-      this.$logo.forEach(path => path.style.fill = "#333333");
+      this.$options.style.opacity = '1';
+      this.$logo.forEach(path => path.style.fill = '#333333');
       this.$code.setValue('');
       this.$btn.style.display = 'block';
       this.$btn.style.opacity = '1';
@@ -225,8 +221,7 @@
 
 
   app.init();
-  
-})()
+}());
 
 
 /* test input 
