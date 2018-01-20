@@ -90,8 +90,6 @@
       const clickthroughNodes = doc.querySelectorAll('a[href*="${clickthrough"]');
       const anchors = Array.from(anchorNodes);
       const clickthroughs = Array.from(clickthroughNodes);
-      const html = doc.documentElement.outerHTML;
-      const output = this.addEntities(html);
 
       if (anchors.length) {
         this.update(anchors);
@@ -104,6 +102,8 @@
         this.find('Btm_Nav_Coupon', clickthroughs, true, this.update.bind(this));
       }
 
+      const html = doc.documentElement.outerHTML;
+      const output = this.addEntities(html);
       return output;
     },
 
@@ -115,7 +115,7 @@
       callback(itemArr, name, coupon);
     },
 
-    update(arr, name = null, coupon = false) { 
+    update(arr, name = null, coupon = false) {
       arr.forEach((anchor) => {
         const anchorName = anchor.getAttribute('rilt') || name;
         const href = anchor.getAttribute('href');
@@ -134,7 +134,8 @@
     },
 
     createClickthrough(name, href, coupon = false) {
-      let clickthrough = "${clickthrough('" + name + "','utm_term=" + name + "'";
+      const utmTerm = `utm_term=${name}`;
+      let clickthrough = `\${clickthrough('${name}','${utmTerm}`;
       if (coupon) {
         const barcodes = this.barcodeString();
         const promocodes = this.promocodeString();
@@ -237,5 +238,5 @@
   <a rilt="Anchor04" href="https://www.somewhere.com">&Prime;</a>
   <a href="${clickthrough('Webview','utm_term=Webview')}">Link</a>
   <a href="${clickthrough('Btm_Nav_Coupon','utm_term=Btm_Nav_Coupon')}">Link</a></body></html>
-
 */
+
