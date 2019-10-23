@@ -120,8 +120,8 @@
         const anchorName = anchor.getAttribute('rilt') || name;
         const href = anchor.getAttribute('href');
         const isCoupon = href.includes('coupon.html') ||
-              href.includes('\'BARCODE1=\'+BARCODE1') ||
-              coupon;
+          href.includes('\'BARCODE1=\'+BARCODE1') ||
+          coupon;
 
         if (isCoupon) {
           const couponClickthrough = this.createClickthrough(anchorName, href, true);
