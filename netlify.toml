@@ -1,0 +1,3 @@
+[build]
+  production="dist"
+  functions="functions"

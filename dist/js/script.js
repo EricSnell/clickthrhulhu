@@ -71,19 +71,20 @@
       });
     },
 
-    run() {
+    async run() {
       const input = this.$code.getValue();
       this.setState();
       if (input) {
         this.showLoader();
-        const output = this.generateOutput();
+        const output = await this.generateOutput();
+        console.log(output);
         setTimeout(this.showResults.bind(this, output), 2200);
       } else {
         this.showError('Need some HTML first!');
       }
     },
 
-    generateOutput() {
+    async generateOutput() {
       const parser = new DOMParser();
       const doc = parser.parseFromString(this.state.html, 'text/html');
       const anchorNodes = doc.querySelectorAll('a[rilt]');
@@ -103,8 +104,10 @@
       }
 
       const html = doc.documentElement.outerHTML;
-      const output = this.addEntities(html);
-      return output;
+      const html_cleaned = this.addEntities(html);
+      const inlinedCSS = await this.inlineCSS(html_cleaned);
+      console.log('INLINED:', inlinedCSS);
+      return inlinedCSS;
     },
 
     find(name, loc, coupon = false, callback) {
@@ -222,21 +225,35 @@
     showError(msg) {
       alert(msg);
     },
+
+    async inlineCSS(html) {
+      const res = await fetch('/.netlify/functions/inliner/inliner.js', { method: 'POST', body: html });
+      const stuff = await res.text();
+      return JSON.parse(stuff)['HTML'];
+    }
   };
+
 
   app.init();
 }());
 
 
 /* test input
-
-  <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-  "http://www.w3.org/TR/html4/loose.dtd">
-  <html><head></head><body><a rilt="Anchor01" href="${clickthrough('Anchor01','utm_term=Anchor01','BARCODE1='+BARCODE1,'BARCODE2='+BARCODE2,'BARCODE3='+BARCODE3,'BARCODE4='+BARCODE4,'BARCODE5='+BARCODE5,'BARCODE6='+BARCODE6,'ONLINECODE1','ONLINECODE2','A','B','C','D','E','GS_BARCODE','PROMOCODE','VERSION','EMAIL_VERSION','DISC','TESTGROUP','CONTACTS_LIST.EMAIL_ADDRESS_')}">Link</a>
-  <a rilt="Anchor02" href="coupon.html">&reg;</a>
-  <a rilt="Anchor03" href="${clickthrough('Anchor03','utm_term=Anchor03')}">&trade;</a>
-  <a rilt="Anchor04" href="https://www.somewhere.com">&Prime;</a>
-  <a href="${clickthrough('Webview','utm_term=Webview')}">Link</a>
-  <a href="${clickthrough('Btm_Nav_Coupon','utm_term=Btm_Nav_Coupon')}">Link</a></body></html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!--[if !mso]><!-->
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<!--<![endif]-->
+<title></title>
+<style type="text/css">
+  #hello {font-size: 38px;}
+  .dark { color: #000000; }
+</style>
+</head>
+<body>
+  <div id='hello' class="dark">Hello</div>
+</body>
+</html>
 */
 
