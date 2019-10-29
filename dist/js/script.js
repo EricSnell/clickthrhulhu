@@ -358,7 +358,7 @@
     async inlineCSS(html) {
       const res = await fetch('/.netlify/functions/inliner/inliner.js', { method: 'POST', body: html });
       const stuff = await res.text();
-      return JSON.parse(stuff)['HTML'];
+      return JSON.parse(stuff).HTML;
     },
   };
 
