@@ -303,7 +303,9 @@ import { linkCategories } from './link-categories.mjs';
     },
 
     async inlineCSS(html) {
-      const res = await fetch('/.netlify/functions/inliner/inliner.js', { method: 'POST', body: html });
+      const url = '/.netlify/functions/inliner/inliner.js';
+      console.log(url);
+      const res = await fetch(url, { method: 'POST', body: html });
       const stuff = await res.text();
       return JSON.parse(stuff)['HTML'];
     },
