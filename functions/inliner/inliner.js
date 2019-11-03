@@ -1,4 +1,5 @@
 const fetch = require('node-fetch');
+
 const API_ENDPOINT = 'https://www.campaignmonitor.com/forms/inliner/';
 
 // Docs on event and context https://www.netlify.com/docs/functions/#the-handler-method

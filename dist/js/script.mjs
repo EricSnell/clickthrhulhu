@@ -1,20 +1,10 @@
+import { codeMirrorConfig } from './codemirror-config.mjs';
+import { linkCategories } from './link-categories.mjs';
+
 (function main() {
   const app = {
 
-    codeMirrorConfig: {
-      lineNumbers: true,
-      mode: 'htmlmixed',
-      theme: 'material',
-      indentWithTabs: true,
-      fixedGutter: true,
-      coverGutterNextToScrollbar: true,
-      showCursorWhenSelecting: true,
-      allowDropFileTypes: ['.htm', '.html', '.htmls', '.htt', '.htx', 'shtml'],
-      autoCloseBrackets: true,
-      autoCloseTags: true,
-      lineWrapping: true,
-      autoFocus: true,
-    },
+    codeMirrorConfig,
 
     state: {
       html: null,
@@ -121,9 +111,10 @@
       let output;
 
       if (anchors.length) {
+        console.log('there are anchors');
         const jsonData = anchors.map((a) => {
           const url = a.getAttribute('href') || '#'
-          const branchURL = `https://joann.app.link/3p?%243p=e_rs&%24original_url=${encodeURIComponent(url)}`
+          const branchURL = `https://joann.app.link/3p?%243p=e_rs&%24original_url=${encodeURIComponent(url)}`;
           const isCouponLink = url.includes('coupon.html');
           const formName = `'!MASTER_COUPON_LP'`;
           const couponPageVars = [
@@ -216,52 +207,9 @@
     },
 
     getLinkCategory(url) {
-      const urlParams = {
-        'cpn=': 'onlinecode',
-        'coupon.html': 'coupon',
-        'buy-online-pickup-in-store': 'banner_joann_bopis',
-        'plus.joann': 'banner_joann_plus',
-        'kids_teachers': 'crafts_675_kidscrafts',
-        '_books': 'hmseas_665_publications',
-        'storage': 'hmseas_664_storage',
-        'wedding': 'hmseas_663_bridal',
-        'needle_arts': 'crafts_660_needlearts',
-        'jewelry_making': 'crafts_343_jewelry',
-        'crafts_hobbies/hobbies': 'crafts_605_traditionalcraft',
-        'basic_craft': 'crafts_640_basiccraftcomponents',
-        'baking_and_party': 'crafts_642_celebration',
-        'craft_painting': 'crafts_645_decorativepainting',
-        'tools_and_machine': 'crafts_650_papercraftingtechnology',
-        'paper_crafting/': 'crafts_655_papercraftingsupplies',
-        'fabric_crafting': 'crafts_780_crafttextiles',
-        'floral_and_wedding': 'hmseas_663_bridal',
-        'ribbons': 'hmseas_680_ribbon',
-        'candles_warmers': 'hmseas_736_candlesanddecor',
-        'frames': 'hmseas_746_frame',
-        'spring_decor_floral': 'hmseas_804_springinspirations',
-        'fall_decor_floral': 'hmseas_790_fallholiday',
-        'holidays_seasons/christmas': 'hmseas_800_christmas',
-        'summer_decor_floral': 'hmseas_805_summer',
-        'classes/': 'service_750_classesservices',
-        'custom_framing/': 'service_751_custom',
-        'foam_and_fiber': 'sewing_776_foamfiber',
-        'sewing/patterns': 'sewing_730_patterns',
-        'sewing/': 'sewing_670_sewingconstruction',
-        'fabric/fleece_fabric': 'sewing_693_fleece',
-        'fabric/apparel_fabric': 'sewing_695_fashionapparelfabrics',
-        'fabric/special_occasion_fabric': 'sewing_700_specialoccasion',
-        'fabric/holiday_fabric': 'sewing_705_holiday',
-        'fabric/quilting_fabric': 'sewing_710_cotton',
-        'fabric/utility_fabric': 'sewing_710_cotton',
-        'fabric/flannel_fabric': 'sewing_715_warm',
-        'fabric/nursery_fabric': 'sewing_715_warm',
-        'fabric/home_decor_fabric': 'sewing_761_homedecfabric',
-        '_trims': 'sewing_766_trims',
-        'fabric/team_shop': 'sewing_784_team',
-        'fabric/character': 'sewing_785_licensed',
-      }
-      for (let i in urlParams) {
-        if (url.includes(i)) return urlParams[i];
+      console.log(linkCategories);
+      for (let i in linkCategories) {
+        if (url.includes(i)) return linkCategories[i];
       }
       return null;
     },
@@ -358,7 +306,7 @@
     async inlineCSS(html) {
       const res = await fetch('/.netlify/functions/inliner/inliner.js', { method: 'POST', body: html });
       const stuff = await res.text();
-      return JSON.parse(stuff).HTML;
+      return JSON.parse(stuff)['HTML'];
     },
   };
 
@@ -376,10 +324,14 @@
 <title></title>
 <style type="text/css">
   #hello {font-size: 38px;}
+  #red {color: red;}
 </style>
 </head>
 <body>
   <div id='hello'>Hello</div>
+  <a id='red' rilt='some_coupon' href="coupon.html">coupon page</a>
+  <a rilt='some_link' href="https://www.joann.com">joann homepage</a>
+  <a rilt="other_link" href="https://www.creativebug.com">creativebug</a>
 </body>
 </html>
 */

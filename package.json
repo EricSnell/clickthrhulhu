@@ -36,6 +36,8 @@
     "nodemon": "^1.19.4"
   },
   "dependencies": {
-    "node-fetch": "^2.6.0"
+    "codemirror": "^5.49.2",
+    "node-fetch": "^2.6.0",
+    "papaparse": "^5.1.0"
   }
 }
