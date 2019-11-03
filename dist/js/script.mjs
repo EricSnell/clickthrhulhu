@@ -303,7 +303,7 @@ import { linkCategories } from './link-categories.mjs';
     },
 
     async inlineCSS(html) {
-      const url = '/.netlify/functions/inliner/inliner.js';
+      const url = '/functions/inliner/inliner.js';
       console.log(url);
       const res = await fetch(url, { method: 'POST', body: html });
       const stuff = await res.text();
