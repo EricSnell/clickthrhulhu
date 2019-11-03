@@ -10,7 +10,7 @@ exports.handler = async (event, context) => {
     return {
       statusCode: 200,
       body: JSON.stringify({ msg: 'THIS WAS NOT A POST REQUEST' })
-    }
+    };
   }
 
   try {
@@ -25,8 +25,8 @@ exports.handler = async (event, context) => {
       .then(data => ({
         statusCode: 200,
         body: JSON.stringify(data),
-      }))
+      }));
   } catch (err) {
-    return { statusCode: 500, body: err.toString() }
+    return { statusCode: 500, body: err.toString() };
   }
-}
+};
