@@ -202,7 +202,6 @@ import { linkCategories } from './link-categories.mjs';
 
       html = this.addEntities(doc.documentElement.outerHTML);
       const inlinedCSS = await this.inlineCSS(html);
-      console.log('INLINED:', inlinedCSS);
       return inlinedCSS;
     },
 
@@ -304,7 +303,7 @@ import { linkCategories } from './link-categories.mjs';
     },
 
     async inlineCSS(html) {
-      const res = await fetch('/inliner', { method: 'POST', body: html });
+      const res = await fetch('/.netlify/functions/inliner/inliner.js', { method: 'POST', body: html });
       const stuff = await res.text();
       return JSON.parse(stuff)['HTML'];
     },
