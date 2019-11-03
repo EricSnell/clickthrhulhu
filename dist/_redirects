@@ -1,2 +1,2 @@
 /inliner /.netlify/functions/inliner/inliner.js 200
-/ https://gracious-cori-7eb7ad.netlify.com/dist/ 200
+/ /dist/ 200
