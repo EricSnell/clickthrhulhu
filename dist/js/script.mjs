@@ -95,7 +95,6 @@ import { linkCategories } from './link-categories.mjs';
       if (input) {
         this.showLoader();
         const output = await this.generateOutput();
-        console.log(output);
         setTimeout(this.showResults.bind(this, output), 2200);
       } else {
         this.showError('Need some HTML first!');
@@ -111,7 +110,6 @@ import { linkCategories } from './link-categories.mjs';
       let output;
 
       if (anchors.length) {
-        console.log('there are anchors');
         const jsonData = anchors.map((a) => {
           const url = a.getAttribute('href') || '#'
           const branchURL = `https://joann.app.link/3p?%243p=e_rs&%24original_url=${encodeURIComponent(url)}`;
@@ -206,7 +204,6 @@ import { linkCategories } from './link-categories.mjs';
     },
 
     getLinkCategory(url) {
-      console.log(linkCategories);
       for (let i in linkCategories) {
         if (url.includes(i)) return linkCategories[i];
       }
@@ -303,7 +300,7 @@ import { linkCategories } from './link-categories.mjs';
     },
 
     async inlineCSS(html) {
-      const url = '/functions/inliner/inliner.js';
+      const url = '/inliner';
       console.log(url);
       const res = await fetch(url, { method: 'POST', body: html });
       const stuff = await res.text();
