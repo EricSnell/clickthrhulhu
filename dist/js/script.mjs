@@ -178,14 +178,13 @@ import { linkCategories } from './link-categories.mjs';
         const csv = Papa.unparse(dedupedJSON, config);
         const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
         const filename = `LinkTable_${new Date().toDateString().replace(/  /g, '_')}`;
-
         const link = document.createElement('a');
         const url = URL.createObjectURL(blob);
         link.setAttribute('href', url);
         link.setAttribute('download', `${filename}.csv`);
         link.style.visibility = 'hidden';
         document.body.appendChild(link);
-        link.click();
+        // link.click();
         document.body.removeChild(link);
 
         this.update(anchors);
@@ -200,7 +199,8 @@ import { linkCategories } from './link-categories.mjs';
 
       html = this.addEntities(doc.documentElement.outerHTML);
       const inlinedCSS = await this.inlineCSS(html);
-      return inlinedCSS;
+      const trimmedHTML = this.trimHTML(inlinedCSS);
+      return trimmedHTML;
     },
 
     getLinkCategory(url) {
@@ -293,6 +293,7 @@ import { linkCategories } from './link-categories.mjs';
       this.$btn.style.display = 'block';
       this.$btn.style.opacity = '1';
       this.$btn.disabled = false;
+      console.clear();
     },
 
     showError(msg) {
@@ -305,6 +306,23 @@ import { linkCategories } from './link-categories.mjs';
       const res = await fetch(url, { method: 'POST', body: html });
       const stuff = await res.text();
       return JSON.parse(stuff)['HTML'];
+    },
+
+    trimHTML(html) {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(html, 'text/html');
+      const treewalker = doc.createTreeWalker(
+        doc.body,
+        NodeFilter.SHOW_COMMENT,
+        {
+          acceptNode(node) {
+            return node.nodeValue !== 'container' ? NodeFilter.FILTER_SKIP : NodeFilter.FILTER_ACCEPT;
+          },
+        },
+        false,
+      );
+      treewalker.nextNode();
+      return treewalker.currentNode.nextElementSibling.outerHTML;
     },
   };
 
@@ -327,9 +345,14 @@ import { linkCategories } from './link-categories.mjs';
 </head>
 <body>
   <div id='hello'>Hello</div>
+  <!--container-->
+  <table>
+  <tr><td>
   <a id='red' rilt='some_coupon' href="coupon.html">coupon page</a>
   <a rilt='some_link' href="https://www.joann.com">joann homepage</a>
   <a rilt="other_link" href="https://www.creativebug.com">creativebug</a>
+  </td></tr></table>
+  <!--/container-->
 </body>
 </html>
 */
