@@ -28,6 +28,7 @@ import { linkCategories } from './link-categories.mjs';
       this.$options = document.getElementById('options-inner');
       this.$barcodes = document.getElementById('barcodes-dropdown');
       this.$vars = document.getElementById('variables-input');
+      this.$crop = document.getElementById('crop-html-checkbox');
       this.$logo = Array.from(document.getElementsByClassName('cthulhu'));
       this.$form = document.getElementById('code-form');
     },
@@ -184,7 +185,7 @@ import { linkCategories } from './link-categories.mjs';
         link.setAttribute('download', `${filename}.csv`);
         link.style.visibility = 'hidden';
         document.body.appendChild(link);
-        // link.click();
+        link.click();
         document.body.removeChild(link);
 
         this.update(anchors);
@@ -199,8 +200,7 @@ import { linkCategories } from './link-categories.mjs';
 
       html = this.addEntities(doc.documentElement.outerHTML);
       const inlinedCSS = await this.inlineCSS(html);
-      const trimmedHTML = this.trimHTML(inlinedCSS);
-      return trimmedHTML;
+      return this.$crop.checked ? this.trimHTML(inlinedCSS) : inlinedCSS;
     },
 
     getLinkCategory(url) {
@@ -302,7 +302,6 @@ import { linkCategories } from './link-categories.mjs';
 
     async inlineCSS(html) {
       const url = '/inliner';
-      console.log(url);
       const res = await fetch(url, { method: 'POST', body: html });
       const stuff = await res.text();
       return JSON.parse(stuff)['HTML'];
