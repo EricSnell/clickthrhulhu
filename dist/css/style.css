@@ -97,6 +97,7 @@ label:hover {
   text-transform: uppercase;
   font-size: 18px;
   width: 100px;
+  margin-right: 1.5rem;
   transition: all 0.2s ease-out;
 }
 
