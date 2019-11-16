@@ -37,6 +37,7 @@
   },
   "dependencies": {
     "codemirror": "^5.49.2",
+    "netlify-lambda": "^1.6.3",
     "node-fetch": "^2.6.0",
     "papaparse": "^5.1.0"
   }
