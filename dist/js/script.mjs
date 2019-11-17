@@ -345,7 +345,6 @@ import { linkCategories } from './link-categories.mjs';
       </table>
       <!-- END AI CONTAINER -->`;
       let frag = doc.createRange().createContextualFragment(module);
-      console.log(frag.firstChild.nextElementSibling);
       const treewalker = doc.createTreeWalker(
         doc,
         NodeFilter.SHOW_COMMENT,
@@ -362,18 +361,15 @@ import { linkCategories } from './link-categories.mjs';
       } while (treewalker.nextNode());
       arr.shift(); // removes body element from array
       arr.reverse(); // put coupon modules first
-      for (let i = 0; i < arr.length; i++) {
+      for (let i = 0; i < arr.length; i += 1) {
         if (!arr[i + 1].nodeValue.includes('3') &&
           !arr[i + 1].nodeValue.includes('3b') &&
           !arr[i + 1].nodeValue.includes('6') &&
           !arr[i + 1].nodeValue.includes('9')) {
-
-          // insert the module before the current node
           arr[i].nextElementSibling.classList.add('clickthrhulu__ai-target');
           [target] = doc.querySelectorAll('.clickthrhulu__ai-target');
           target.parentElement.insertBefore(frag, target);
           result = doc.body.innerHTML.replace(/&gt;/g, '>').replace(/&lt;/g, '<');
-
           break;
         }
       }
@@ -410,21 +406,4 @@ import { linkCategories } from './link-categories.mjs';
   <!--/container-->
 </body>
 </html>
-*/
-
-
-/* AI HTML
-<!-- START AI CONTAINER -->
-<table align="center" border="0" cellspacing="0" cellpadding="0" style="width:100%;border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%;" >
-<tbody>
-<tr>
-<td style="padding-top:20px;mso-line-height-rule:exactly;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%;border-collapse:collapse;" >
-    <#if TESTGROUP =='AI'>
-        <#include 'cms://contentlibrary/!masterbanners/jas_oracle_ai_3rec_v2.htm'>
-    </#if>
-</td>
-</tr>
-</tbody>
-</table>
-<!-- END AI CONTAINER -->
 */
