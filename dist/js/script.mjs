@@ -186,7 +186,7 @@ import { linkCategories } from './link-categories.mjs';
         link.setAttribute('download', `${filename}.csv`);
         link.style.visibility = 'hidden';
         document.body.appendChild(link);
-        // link.click();
+        link.click();
         document.body.removeChild(link);
 
         this.update(anchors);
@@ -375,7 +375,8 @@ import { linkCategories } from './link-categories.mjs';
             arr[i].nextElementSibling.classList.add('clickthrhulu__ai-target');
             [target] = doc.querySelectorAll('.clickthrhulu__ai-target');
             target.parentElement.insertBefore(frag, target);
-            result = doc.body.innerHTML.replace(/&gt;/g, '>').replace(/&lt;/g, '<');
+            console.log(doc.body.innerHTML);
+            result = doc.body.innerHTML.replace(/&gt;/g, '>').replace(/&lt;/g, '<').replace(/<!--#if-->/g, '</#if>');
             break;
           }
         }
