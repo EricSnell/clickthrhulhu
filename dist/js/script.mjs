@@ -185,7 +185,7 @@ import { linkCategories } from './link-categories.mjs';
         link.setAttribute('download', `${filename}.csv`);
         link.style.visibility = 'hidden';
         document.body.appendChild(link);
-        link.click();
+        // link.click();
         document.body.removeChild(link);
 
         this.update(anchors);
@@ -200,7 +200,7 @@ import { linkCategories } from './link-categories.mjs';
 
       html = this.addEntities(doc.documentElement.outerHTML);
       const inlinedCSS = await this.inlineCSS(html);
-      return this.$crop.checked ? this.trimHTML(inlinedCSS) : inlinedCSS;
+      return this.$crop.checked ? this.addHTML(inlinedCSS) : inlinedCSS;
     },
 
     getLinkCategory(url) {
@@ -269,7 +269,7 @@ import { linkCategories } from './link-categories.mjs';
 
     showLoader() {
       this.$code.setValue('');
-      this.$options.style.opacity = "0";
+      this.$options.style.opacity = '0';
       this.$btn.style.opacity = '0';
       this.$btn.disabled = true;
       this.$codeMirror.style.opacity = '0.9';
@@ -323,6 +323,62 @@ import { linkCategories } from './link-categories.mjs';
       treewalker.nextNode();
       return treewalker.currentNode.nextElementSibling.outerHTML;
     },
+
+    addHTML(html) {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(html, 'text/html');
+      const arr = [];
+      let result;
+      const newguy = doc.createElement('div');
+      let target;
+      const module = `<!-- START AI CONTAINER -->
+      <table align="center" border="0" cellspacing="0" cellpadding="0" style="width:100%;border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%;" >
+      <tbody>
+      <tr>
+      <td style="padding-top:20px;mso-line-height-rule:exactly;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%;border-collapse:collapse;" >
+          <#if TESTGROUP =='AI'>
+              <#include 'cms://contentlibrary/!masterbanners/jas_oracle_ai_3rec_v2.htm'>
+          </#if>
+      </td>
+      </tr>
+      </tbody>
+      </table>
+      <!-- END AI CONTAINER -->`;
+      let frag = doc.createRange().createContextualFragment(module);
+      console.log(frag.firstChild.nextElementSibling);
+      const treewalker = doc.createTreeWalker(
+        doc,
+        NodeFilter.SHOW_COMMENT,
+        {
+          acceptNode(node) {
+            return node.nodeValue.includes('module') ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP;
+          },
+        },
+        false,
+      );
+
+      do {
+        arr.push(treewalker.currentNode);
+      } while (treewalker.nextNode());
+      arr.shift(); // removes body element from array
+      arr.reverse(); // put coupon modules first
+      for (let i = 0; i < arr.length; i++) {
+        if (!arr[i + 1].nodeValue.includes('3') &&
+          !arr[i + 1].nodeValue.includes('3b') &&
+          !arr[i + 1].nodeValue.includes('6') &&
+          !arr[i + 1].nodeValue.includes('9')) {
+
+          // insert the module before the current node
+          arr[i].nextElementSibling.classList.add('clickthrhulu__ai-target');
+          [target] = doc.querySelectorAll('.clickthrhulu__ai-target');
+          target.parentElement.insertBefore(frag, target);
+          result = doc.body.innerHTML;
+
+          break;
+        }
+      }
+      return result;
+    },
   };
 
   app.init();
@@ -354,4 +410,21 @@ import { linkCategories } from './link-categories.mjs';
   <!--/container-->
 </body>
 </html>
+*/
+
+
+/* AI HTML
+<!-- START AI CONTAINER -->
+<table align="center" border="0" cellspacing="0" cellpadding="0" style="width:100%;border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%;" >
+<tbody>
+<tr>
+<td style="padding-top:20px;mso-line-height-rule:exactly;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%;border-collapse:collapse;" >
+    <#if TESTGROUP =='AI'>
+        <#include 'cms://contentlibrary/!masterbanners/jas_oracle_ai_3rec_v2.htm'>
+    </#if>
+</td>
+</tr>
+</tbody>
+</table>
+<!-- END AI CONTAINER -->
 */
