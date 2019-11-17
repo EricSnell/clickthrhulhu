@@ -88,6 +88,10 @@ p {
   margin-bottom: 10px;
 }
 
+#options-inner > * {
+  user-select: none;
+}
+
 label:hover {
   cursor: pointer;
   color: #ccc;
@@ -104,6 +108,10 @@ label:hover {
 #options_variables {
   position: relative;
   margin-left: 20px;
+}
+
+#options_crop {
+  padding-right: 1.5rem;
 }
 
 #variables-input + #variables-input_help {

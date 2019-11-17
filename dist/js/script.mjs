@@ -29,6 +29,7 @@ import { linkCategories } from './link-categories.mjs';
       this.$barcodes = document.getElementById('barcodes-dropdown');
       this.$vars = document.getElementById('variables-input');
       this.$crop = document.getElementById('crop-html-checkbox');
+      this.$ai = document.getElementById('ai-checkbox');
       this.$logo = Array.from(document.getElementsByClassName('cthulhu'));
       this.$form = document.getElementById('code-form');
     },
@@ -198,9 +199,10 @@ import { linkCategories } from './link-categories.mjs';
         this.find('Btm_Nav_Coupon', clickthroughs, true, this.update.bind(this));
       }
 
-      html = this.addEntities(doc.documentElement.outerHTML);
-      const inlinedCSS = await this.inlineCSS(html);
-      return this.$crop.checked ? this.addHTML(inlinedCSS) : inlinedCSS;
+      html = await this.inlineCSS(doc.documentElement.outerHTML);
+      html = this.$crop.checked ? this.trimHTML(html) : html;
+      html = this.$ai.checked ? this.addHTML(html) : html;
+      return html;
     },
 
     getLinkCategory(url) {
@@ -329,7 +331,6 @@ import { linkCategories } from './link-categories.mjs';
       const doc = parser.parseFromString(html, 'text/html');
       const arr = [];
       let result;
-      const newguy = doc.createElement('div');
       let target;
       const module = `<!-- START AI CONTAINER -->
       <table align="center" border="0" cellspacing="0" cellpadding="0" style="width:100%;border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%;" >
@@ -344,7 +345,7 @@ import { linkCategories } from './link-categories.mjs';
       </tbody>
       </table>
       <!-- END AI CONTAINER -->`;
-      let frag = doc.createRange().createContextualFragment(module);
+      const frag = doc.createRange().createContextualFragment(module);
       const treewalker = doc.createTreeWalker(
         doc,
         NodeFilter.SHOW_COMMENT,
@@ -362,18 +363,23 @@ import { linkCategories } from './link-categories.mjs';
       arr.shift(); // removes body element from array
       arr.reverse(); // put coupon modules first
       for (let i = 0; i < arr.length; i += 1) {
-        if (!arr[i + 1].nodeValue.includes('3') &&
-          !arr[i + 1].nodeValue.includes('3b') &&
-          !arr[i + 1].nodeValue.includes('6') &&
-          !arr[i + 1].nodeValue.includes('9')) {
-          arr[i].nextElementSibling.classList.add('clickthrhulu__ai-target');
-          [target] = doc.querySelectorAll('.clickthrhulu__ai-target');
-          target.parentElement.insertBefore(frag, target);
-          result = doc.body.innerHTML.replace(/&gt;/g, '>').replace(/&lt;/g, '<');
-          break;
+        if (arr[i].nodeValue.includes('3') ||
+          arr[i].nodeValue.includes('3b') ||
+          arr[i].nodeValue.includes('6') ||
+          arr[i].nodeValue.includes('9')) {
+          if (!arr[i + 1].nodeValue.includes('3') &&
+            !arr[i + 1].nodeValue.includes('3b') &&
+            !arr[i + 1].nodeValue.includes('6') &&
+            !arr[i + 1].nodeValue.includes('9')) {
+            arr[i].nextElementSibling.classList.add('clickthrhulu__ai-target');
+            [target] = doc.querySelectorAll('.clickthrhulu__ai-target');
+            target.parentElement.insertBefore(frag, target);
+            result = doc.body.innerHTML.replace(/&gt;/g, '>').replace(/&lt;/g, '<');
+            break;
+          }
         }
       }
-      return result;
+      return result || html;
     },
   };
 
