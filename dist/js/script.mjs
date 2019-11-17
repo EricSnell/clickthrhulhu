@@ -363,6 +363,7 @@ import { linkCategories } from './link-categories.mjs';
       arr.shift(); // removes body element from array
       arr.reverse(); // put coupon modules first
       for (let i = 0; i < arr.length; i += 1) {
+        // if there is a coupon module, we want to check that it's the last one before injecting the AI module
         if (arr[i].nodeValue.includes('3') ||
           arr[i].nodeValue.includes('3b') ||
           arr[i].nodeValue.includes('6') ||
@@ -405,9 +406,17 @@ import { linkCategories } from './link-categories.mjs';
   <!--container-->
   <table>
   <tr><td>
-  <a id='red' rilt='some_coupon' href="coupon.html">coupon page</a>
-  <a rilt='some_link' href="https://www.joann.com">joann homepage</a>
-  <a rilt="other_link" href="https://www.creativebug.com">creativebug</a>
+  <a id="red" rilt="some_coupon" href="${clickthrough('some_coupon','utm_term=some_coupon','EMAIL_SHA256_HASH_','DWID','BARCODE1='+BARCODE1,'BARCODE2='+BARCODE2,'BARCODE3='+BARCODE3,'BARCODE4='+BARCODE4,'BARCODE5='+BARCODE5,'BARCODE6='+BARCODE6,'BARCODE7='+BARCODE7,'BARCODE8='+BARCODE8,'BARCODE9='+BARCODE9,'BARCODE10='+BARCODE10,'BARCODE11='+BARCODE11,'BARCODE12='+BARCODE12,'NAME','GS_BARCODE','PROMOCODE','VERSION','EMAIL_VERSION','HASBANNER','DISC','DISC2','DISC3','TESTGROUP','CONTACTS_LIST.EMAIL_ADDRESS_','ENDDATE','EXP_DATE','F4H_BARCODE','F4H_PROMOCODE','JPLUS_BARCODE','JPLUS_PROMOCODE','AUDVERS','BANNERGROUP','EMAIL_BANNER_MESSAGE','MISSION_DETAILS_EXCLUSIONS','MISSION_HEADLINE_COPY','EMAIL_SHA256_HASH_','USM_BARCODE','USM_PROMOCODE','LOYALTY','STOREGROUP','BANNERGROUP1','BANNERGROUP2','BANNERGROUP3')}" style="color:red;" >coupon page</a>
+  <a rilt="some_link" href="${clickthrough('some_link','utm_term=some_link','EMAIL_SHA256_HASH_','DWID')}">joann homepage</a>
+  <a rilt="other_link" href="${clickthrough('other_link','utm_term=other_link','EMAIL_SHA256_HASH_','DWID')}">creativebug</a>
+	<!-- module 11 -->
+	<a rilt="other_link" href="${clickthrough('other_link','utm_term=other_link','EMAIL_SHA256_HASH_','DWID')}">creativebug</a>
+	<!-- module 3 -->
+	<a rilt="other_link" href="${clickthrough('other_link','utm_term=other_link','EMAIL_SHA256_HASH_','DWID')}">creativebug</a>
+	<!-- module 11 -->
+	<a rilt="other_link" href="${clickthrough('other_link','utm_term=other_link','EMAIL_SHA256_HASH_','DWID')}">creativebug</a>
+	<!-- module 11 -->
+<a rilt="other_link" href="${clickthrough('other_link','utm_term=other_link','EMAIL_SHA256_HASH_','DWID')}" class="clickthrhulu__ai-target">creativebug</a>
   </td></tr></table>
   <!--/container-->
 </body>
