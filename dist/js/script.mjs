@@ -372,7 +372,7 @@ import { linkCategories } from './link-categories.mjs';
           arr[i].nextElementSibling.classList.add('clickthrhulu__ai-target');
           [target] = doc.querySelectorAll('.clickthrhulu__ai-target');
           target.parentElement.insertBefore(frag, target);
-          result = doc.body.innerHTML;
+          result = doc.body.innerHTML.replace(/&gt;/g, '>').replace(/&lt;/g, '<');
 
           break;
         }
