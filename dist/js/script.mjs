@@ -202,7 +202,7 @@ import { linkCategories } from './link-categories.mjs';
       html = await this.inlineCSS(doc.documentElement.outerHTML);
       html = this.$crop.checked ? this.trimHTML(html) : html;
       html = this.$ai.checked ? this.addHTML(html) : html;
-      return html;
+      return this.addEntities(html);
     },
 
     getLinkCategory(url) {
