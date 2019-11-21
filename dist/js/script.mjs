@@ -1,6 +1,6 @@
 import codeMirrorConfig from './codemirror-config.mjs';
 import linkCategories from './link-categories.mjs';
-import commonVariables from './common-variables.mjs';
+import appConfig from './app-config.mjs';
 
 (function main() {
   const app = {
@@ -20,7 +20,7 @@ import commonVariables from './common-variables.mjs';
     },
 
     cacheDOM() {
-      this.$code = CodeMirror.fromTextArea(document.getElementById("code"), this.codeMirrorConfig);
+      this.$code = CodeMirror.fromTextArea(document.getElementById('code'), this.codeMirrorConfig);
       [this.$codeMirror] = document.getElementsByClassName('CodeMirror');
       this.$app = document.getElementById('app-input');
       this.$btn = document.getElementById('btn');
@@ -46,49 +46,17 @@ import commonVariables from './common-variables.mjs';
         barcodes: this.$barcodes.value,
         variables: this.$vars.value ?
           this.$vars.value.toUpperCase().replace(/ /g, '').split(',')
-          : []
+          : [],
       });
       this.addCommonVars();
     },
 
     addCommonVars() {
-      const commonVars = [
-        'NAME',
-        'GS_BARCODE',
-        'PROMOCODE',
-        'VERSION',
-        'EMAIL_VERSION',
-        'HASBANNER',
-        'DISC',
-        'DISC2',
-        'DISC3',
-        'TESTGROUP',
-        'CONTACTS_LIST.EMAIL_ADDRESS_',
-        'ENDDATE',
-        'EXP_DATE',
-        'F4H_BARCODE',
-        'F4H_PROMOCODE',
-        'JPLUS_BARCODE',
-        'JPLUS_PROMOCODE',
-        'AUDVERS',
-        'BANNERGROUP',
-        'EMAIL_BANNER_MESSAGE',
-        'MISSION_DETAILS_EXCLUSIONS',
-        'MISSION_HEADLINE_COPY',
-        'EMAIL_SHA256_HASH_',
-        'USM_BARCODE',
-        'USM_PROMOCODE',
-        'LOYALTY',
-        'STOREGROUP',
-        'BANNERGROUP1',
-        'BANNERGROUP2',
-        'BANNERGROUP3'
-      ]
       this.state = Object.assign(this.state, {
         variables: [
-          ...commonVars,
+          ...appConfig.variables,
           ...this.state.variables,
-        ]
+        ],
       });
     },
 
@@ -110,55 +78,26 @@ import commonVariables from './common-variables.mjs';
       const anchors = [...doc.querySelectorAll('a[rilt]')];
       const clickthroughs = [...doc.querySelectorAll('a[href*="${clickthrough"]')];
       let html;
-      let output;
 
       if (anchors.length) {
         const jsonData = anchors.map((a) => {
           const url = a.getAttribute('href') || '#'
           const branchURL = `https://joann.app.link/3p?%243p=e_rs&%24original_url=${encodeURIComponent(url)}`;
           const isCouponLink = url.includes('coupon.html');
-          const formName = `'!MASTER_COUPON_LP'`;
-          const couponPageVars = [
-            `'NAME'`,
-            `'BODY'`,
-            `'HASBANNER'`,
-            `'GS_BARCODE'`,
-            `'PROMOCODE'`,
-            `'EMAIL_VERSION'`,
-            `'VERSION'`,
-            `'DISC'`,
-            `'TESTGROUP'`,
-            `'F4H_BARCODE'`,
-            `'F4H_PROMOCODE'`,
-            `'JPLUS_BARCODE'`,
-            `'JPLUS_PROMOCODE'`,
-            `'USM_BARCODE'`,
-            `'USM_PROMOCODE'`,
-            `'LOYALTY'`,
-            `'STOREGROUP'`,
-            `'BANNERGROUP1'`,
-            `'BANNERGROUP2'`,
-            `'BANNERGROUP3'`
-          ];
-
-          const deeplinkUrlExclusions = [
-            'clickthrough',
-            'cpn=',
-            'weekly-ad',
-            'sewing-studio',
-            '/projects',
-          ];
-
+          const { deeplinkUrlExclusions } = appConfig;
           const urlContainsExclusion = deeplinkUrlExclusions.some(excl => url.includes(excl));
           const deeplink = !isCouponLink && !urlContainsExclusion && url.includes('joann.com');
           let LINK_URL;
           let formLink;
+          const formName = '!MASTER_COUPON_LP';
+          const couponVars = [];
 
           for (let i = 1; i <= this.state.barcodes; i += 1) {
-            couponPageVars.push(`'BARCODE${i}'`);
+            couponVars.push(`BARCODE${i}`);
           }
 
-          formLink = `\${form(${formName},${[...couponPageVars]})}`;
+          formLink = `\${form(${formName},${[...this.state.variables, ...couponVars]})}`;
+          console.log(formLink);
           LINK_URL = deeplink ? branchURL : isCouponLink ? formLink : url;
 
           return {
@@ -187,7 +126,7 @@ import commonVariables from './common-variables.mjs';
         link.setAttribute('download', `${filename}.csv`);
         link.style.visibility = 'hidden';
         document.body.appendChild(link);
-        link.click();
+        // link.click();
         document.body.removeChild(link);
 
         this.update(anchors);
@@ -239,9 +178,9 @@ import commonVariables from './common-variables.mjs';
       });
     },
 
-    createClickthrough(name, href, coupon = false) {
+    createClickthrough(linkName, href, coupon = false) {
       const trackingParams = [
-        `'utm_term=${name}'`,
+        `'utm_term=${linkName}'`,
         "'EMAIL_SHA256_HASH_'",
         "'DWID'",
       ];
@@ -251,7 +190,7 @@ import commonVariables from './common-variables.mjs';
         }
         this.state.variables.forEach(i => trackingParams.push(`'${i}'`));
       }
-      return `\${clickthrough('${name}',${[...trackingParams]})}`;
+      return `\${clickthrough('${linkName}',${[...trackingParams]})}`;
     },
 
     addEntities(html) {
@@ -333,20 +272,8 @@ import commonVariables from './common-variables.mjs';
       const arr = [];
       let result;
       let target;
-      const module = `<!-- START AI CONTAINER -->
-      <table align="center" border="0" cellspacing="0" cellpadding="0" style="width:100%;border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%;" >
-      <tbody>
-      <tr>
-      <td style="padding-top:20px;mso-line-height-rule:exactly;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%;border-collapse:collapse;" >
-          <#if TESTGROUP =='AI'>
-              <#include 'cms://contentlibrary/!masterbanners/jas_oracle_ai_3rec_v2.htm'>
-          </#if>
-      </td>
-      </tr>
-      </tbody>
-      </table>
-      <!-- END AI CONTAINER -->`;
-      const frag = doc.createRange().createContextualFragment(module);
+      const { ai } = appConfig.html;
+      const frag = doc.createRange().createContextualFragment(ai);
       const treewalker = doc.createTreeWalker(
         doc,
         NodeFilter.SHOW_COMMENT,
@@ -376,7 +303,6 @@ import commonVariables from './common-variables.mjs';
             arr[i].nextElementSibling.classList.add('clickthrhulu__ai-target');
             [target] = doc.querySelectorAll('.clickthrhulu__ai-target');
             target.parentElement.insertBefore(frag, target);
-            console.log(doc.body.innerHTML);
             result = doc.body.innerHTML.replace(/&gt;/g, '>').replace(/&lt;/g, '<').replace(/<!--#if-->/g, '</#if>');
             break;
           }
@@ -388,7 +314,6 @@ import commonVariables from './common-variables.mjs';
 
   app.init();
 }());
-
 
 /* test input
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office"><head>
@@ -408,17 +333,17 @@ import commonVariables from './common-variables.mjs';
   <!--container-->
   <table>
   <tr><td>
-  <a id="red" rilt="some_coupon" href="${clickthrough('some_coupon','utm_term=some_coupon','EMAIL_SHA256_HASH_','DWID','BARCODE1='+BARCODE1,'BARCODE2='+BARCODE2,'BARCODE3='+BARCODE3,'BARCODE4='+BARCODE4,'BARCODE5='+BARCODE5,'BARCODE6='+BARCODE6,'BARCODE7='+BARCODE7,'BARCODE8='+BARCODE8,'BARCODE9='+BARCODE9,'BARCODE10='+BARCODE10,'BARCODE11='+BARCODE11,'BARCODE12='+BARCODE12,'NAME','GS_BARCODE','PROMOCODE','VERSION','EMAIL_VERSION','HASBANNER','DISC','DISC2','DISC3','TESTGROUP','CONTACTS_LIST.EMAIL_ADDRESS_','ENDDATE','EXP_DATE','F4H_BARCODE','F4H_PROMOCODE','JPLUS_BARCODE','JPLUS_PROMOCODE','AUDVERS','BANNERGROUP','EMAIL_BANNER_MESSAGE','MISSION_DETAILS_EXCLUSIONS','MISSION_HEADLINE_COPY','EMAIL_SHA256_HASH_','USM_BARCODE','USM_PROMOCODE','LOYALTY','STOREGROUP','BANNERGROUP1','BANNERGROUP2','BANNERGROUP3')}" style="color:red;" >coupon page</a>
+  <a id="red" rilt="some_coupon" href="coupon.html" style="color:red;" >coupon page</a>
   <a rilt="some_link" href="${clickthrough('some_link','utm_term=some_link','EMAIL_SHA256_HASH_','DWID')}">joann homepage</a>
-  <a rilt="other_link" href="${clickthrough('other_link','utm_term=other_link','EMAIL_SHA256_HASH_','DWID')}">creativebug</a>
+  <a rilt="other_link" href="that.com">creativebug</a>
 	<!-- module 11 -->
-	<a rilt="other_link" href="${clickthrough('other_link','utm_term=other_link','EMAIL_SHA256_HASH_','DWID')}">creativebug</a>
+	<a rilt="other_link" href="someplace.com" >creativebug</a>
 	<!-- module 3 -->
-	<a rilt="other_link" href="${clickthrough('other_link','utm_term=other_link','EMAIL_SHA256_HASH_','DWID')}">creativebug</a>
+	<a rilt="other_link" href="anotherplace.com">creativebug</a>
 	<!-- module 11 -->
-	<a rilt="other_link" href="${clickthrough('other_link','utm_term=other_link','EMAIL_SHA256_HASH_','DWID')}">creativebug</a>
+	<a rilt="other_link" href="whatplace.com">creativebug</a>
 	<!-- module 11 -->
-<a rilt="other_link" href="${clickthrough('other_link','utm_term=other_link','EMAIL_SHA256_HASH_','DWID')}" class="clickthrhulu__ai-target">creativebug & ®' &reg; &ndash; - ¢ &cent;</a>
+<a rilt="other_link" href="whatplace.com">creativebug & ®' &reg; &ndash; - ¢ &cent;</a>
   </td></tr></table>
   <!--/container-->
 </body>
