@@ -1,5 +1,6 @@
-import { codeMirrorConfig } from './codemirror-config.mjs';
-import { linkCategories } from './link-categories.mjs';
+import codeMirrorConfig from './codemirror-config.mjs';
+import linkCategories from './link-categories.mjs';
+import commonVariables from './common-variables.mjs';
 
 (function main() {
   const app = {
@@ -417,7 +418,7 @@ import { linkCategories } from './link-categories.mjs';
 	<!-- module 11 -->
 	<a rilt="other_link" href="${clickthrough('other_link','utm_term=other_link','EMAIL_SHA256_HASH_','DWID')}">creativebug</a>
 	<!-- module 11 -->
-<a rilt="other_link" href="${clickthrough('other_link','utm_term=other_link','EMAIL_SHA256_HASH_','DWID')}" class="clickthrhulu__ai-target">creativebug</a>
+<a rilt="other_link" href="${clickthrough('other_link','utm_term=other_link','EMAIL_SHA256_HASH_','DWID')}" class="clickthrhulu__ai-target">creativebug & ®' &reg; &ndash; - ¢ &cent;</a>
   </td></tr></table>
   <!--/container-->
 </body>

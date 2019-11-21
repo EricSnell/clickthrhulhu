@@ -1,4 +1,4 @@
-export const linkCategories = {
+const linkCategories = {
   'cpn=': 'onlinecode',
   'coupon.html': 'coupon',
   'buy-online-pickup-in-store': 'banner_joann_bopis',
@@ -42,3 +42,5 @@ export const linkCategories = {
   'fabric/team_shop': 'sewing_784_team',
   'fabric/character': 'sewing_785_licensed',
 };
+
+export default linkCategories;

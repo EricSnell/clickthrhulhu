@@ -1,4 +1,4 @@
-export const codeMirrorConfig = {
+const codeMirrorConfig = {
   lineNumbers: true,
   mode: 'htmlmixed',
   theme: 'material',
@@ -11,4 +11,6 @@ export const codeMirrorConfig = {
   autoCloseTags: true,
   lineWrapping: true,
   autoFocus: true,
-}
+};
+
+export default codeMirrorConfig;
