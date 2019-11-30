@@ -185,7 +185,7 @@ import appConfig from './app-config.mjs';
         "'DWID'",
       ];
       if (coupon) {
-        for (let i = 1; i <= this.state.barcodes; i++) {
+        for (let i = 1; i <= this.state.barcodes; i += 1) {
           trackingParams.push(`'BARCODE${i}='+BARCODE${i}`);
         }
         this.state.variables.forEach(i => trackingParams.push(`'${i}'`));
