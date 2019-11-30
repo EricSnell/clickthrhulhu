@@ -72,9 +72,14 @@ import appConfig from './app-config.mjs';
       }
     },
 
-    async generateOutput() {
+    createDOM(htmlString) {
       const parser = new DOMParser();
-      const doc = parser.parseFromString(this.state.html, 'text/html');
+      const dom = parser.parseFromString(htmlString, 'text/html');
+      return dom;
+    },
+
+    async generateOutput() {
+      const doc = this.createDOM(this.state.html);
       const anchors = [...doc.querySelectorAll('a[rilt]')];
       const clickthroughs = [...doc.querySelectorAll('a[href*="${clickthrough"]')];
       let html;
@@ -146,7 +151,8 @@ import appConfig from './app-config.mjs';
     },
 
     getLinkCategory(url) {
-      for (let i in linkCategories) {
+      // eslint-disable-next-line no-restricted-syntax
+      for (const i in linkCategories) {
         if (url.includes(i)) return linkCategories[i];
       }
       return null;
@@ -267,8 +273,7 @@ import appConfig from './app-config.mjs';
     },
 
     addHTML(html) {
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(html, 'text/html');
+      const doc = this.createDOM(html);
       const arr = [];
       let result;
       let target;
@@ -335,15 +340,15 @@ import appConfig from './app-config.mjs';
   <tr><td>
   <a id="red" rilt="some_coupon" href="coupon.html" style="color:red;" >coupon page</a>
   <a rilt="some_link" href="${clickthrough('some_link','utm_term=some_link','EMAIL_SHA256_HASH_','DWID')}">joann homepage</a>
-  <a rilt="other_link" href="that.com">creativebug</a>
+  <a rilt="other_link1" href="that.com">creativebug</a>
 	<!-- module 11 -->
-	<a rilt="other_link" href="someplace.com" >creativebug</a>
+	<a rilt="other_link2" href="someplace.com" >creativebug</a>
 	<!-- module 3 -->
-	<a rilt="other_link" href="anotherplace.com">creativebug</a>
+	<a rilt="other_link3" href="anotherplace.com">creativebug</a>
 	<!-- module 11 -->
-	<a rilt="other_link" href="whatplace.com">creativebug</a>
+	<a rilt="other_link4" href="whatplace.com">creativebug</a>
 	<!-- module 11 -->
-<a rilt="other_link" href="whatplace.com">creativebug & ®' &reg; &ndash; - ¢ &cent;</a>
+<a rilt="other_link5" href="whatplace.com/cpn=sup">creativebug & ®' &reg; &ndash; - ¢ &cent;</a>
   </td></tr></table>
   <!--/container-->
 </body>
