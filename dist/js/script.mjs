@@ -81,7 +81,7 @@ import appConfig from './app-config.mjs';
 
       if (anchors.length) {
         const jsonData = anchors.map((a) => {
-          const url = a.getAttribute('href') || '#'
+          const url = a.getAttribute('href') || '#';
           const branchURL = `https://joann.app.link/3p?%243p=e_rs&%24original_url=${encodeURIComponent(url)}`;
           const isCouponLink = url.includes('coupon.html');
           const { deeplinkUrlExclusions } = appConfig;
@@ -140,8 +140,8 @@ import appConfig from './app-config.mjs';
       }
 
       html = await this.inlineCSS(doc.documentElement.outerHTML);
-      html = this.$crop.checked ? this.trimHTML(html) : html;
-      html = this.$ai.checked ? this.addHTML(html) : html;
+      // html = this.$crop.checked ? this.trimHTML(html) : html;
+      // html = this.$ai.checked ? this.addHTML(html) : html;
       return this.addEntities(html);
     },
 
