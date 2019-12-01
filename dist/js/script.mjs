@@ -40,7 +40,7 @@ import appConfig from './app-config.mjs';
       this.$resetBtn.addEventListener('click', this.reset.bind(this));
     },
 
-    setState() {
+    setInitialState() {
       this.state = Object.assign({}, {
         html: this.$code.getValue(),
         barcodes: this.$barcodes.value,
@@ -61,15 +61,19 @@ import appConfig from './app-config.mjs';
     },
 
     async run() {
-      const input = this.$code.getValue();
-      this.setState();
-      if (input) {
+      if (this.validateInput()) {
+        this.setInitialState();
         this.showLoader();
         const output = await this.generateOutput();
-        setTimeout(this.showResults.bind(this, output), 2200);
+        setTimeout(this.showResults.bind(this, output));
       } else {
         this.showError('Need some HTML first!');
       }
+    },
+
+    validateInput() {
+      const input = this.$code.getValue();
+      return input;
     },
 
     createDOM(htmlString) {
@@ -78,62 +82,74 @@ import appConfig from './app-config.mjs';
       return dom;
     },
 
+    extractRILTs(dom) {
+      return [...dom.querySelectorAll('a[rilt]')];
+    },
+
+    extractClickthrus(dom) {
+      return [...dom.querySelectorAll('a[href*="${clickthrough"]')];
+    },
+
+    assignLinkProperties(a) {
+      const url = a.getAttribute('href') || '#';
+      const branchURL = `https://joann.app.link/3p?%243p=e_rs&%24original_url=${encodeURIComponent(url)}`;
+      const isCouponLink = url.includes('coupon.html');
+      const { deeplinkUrlExclusions } = appConfig;
+      const urlContainsExclusion = deeplinkUrlExclusions.some(excl => url.includes(excl));
+      const deeplink = !isCouponLink && !urlContainsExclusion && url.includes('joann.com');
+      const formName = '!MASTER_COUPON_LP';
+      const couponVars = [];
+      let LINK_URL;
+      let formLink;
+
+      for (let i = 1; i <= this.state.barcodes; i += 1) {
+        couponVars.push(`BARCODE${i}`);
+      }
+
+      formLink = `\${form(${formName},${[...this.state.variables, ...couponVars]})}`;
+      LINK_URL = deeplink ? branchURL : isCouponLink ? formLink : url;
+
+      return {
+        LINK_NAME: a.getAttribute('rilt'),
+        LINK_URL,
+        LINK_CATEGORY: this.getLinkCategory(url),
+        IOS_LINK_URL: deeplink ? LINK_URL : null,
+        ANDROID_LINK_URL: deeplink ? LINK_URL : null,
+      };
+    },
+
+    downloadCSV(tableData, name = 'LinkTable') {
+      const config = { quotes: true };
+      const csv = Papa.unparse(tableData, config);
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const filename = `${name}_${new Date().toDateString().replace(/  /g, '_')}`;
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      link.setAttribute('href', url);
+      link.setAttribute('download', `${filename}.csv`);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      // link.click();
+      document.body.removeChild(link);
+    },
+
     async generateOutput() {
       const doc = this.createDOM(this.state.html);
-      const anchors = [...doc.querySelectorAll('a[rilt]')];
-      const clickthroughs = [...doc.querySelectorAll('a[href*="${clickthrough"]')];
+      const anchors = this.extractRILTs(doc);
+      const clickthroughs = this.extractClickthrus(doc);
       let html;
 
       if (anchors.length) {
-        const jsonData = anchors.map((a) => {
-          const url = a.getAttribute('href') || '#';
-          const branchURL = `https://joann.app.link/3p?%243p=e_rs&%24original_url=${encodeURIComponent(url)}`;
-          const isCouponLink = url.includes('coupon.html');
-          const { deeplinkUrlExclusions } = appConfig;
-          const urlContainsExclusion = deeplinkUrlExclusions.some(excl => url.includes(excl));
-          const deeplink = !isCouponLink && !urlContainsExclusion && url.includes('joann.com');
-          let LINK_URL;
-          let formLink;
-          const formName = '!MASTER_COUPON_LP';
-          const couponVars = [];
+        const linkTableData = anchors
+          .map(this.assignLinkProperties.bind(this))
+          .reduce((acc, curr) => {
+            if (!acc.find(({ LINK_NAME }) => LINK_NAME === curr.LINK_NAME)) {
+              acc.push(curr);
+            }
+            return acc;
+          }, []);
 
-          for (let i = 1; i <= this.state.barcodes; i += 1) {
-            couponVars.push(`BARCODE${i}`);
-          }
-
-          formLink = `\${form(${formName},${[...this.state.variables, ...couponVars]})}`;
-          console.log(formLink);
-          LINK_URL = deeplink ? branchURL : isCouponLink ? formLink : url;
-
-          return {
-            LINK_NAME: a.getAttribute('rilt'),
-            LINK_URL,
-            LINK_CATEGORY: this.getLinkCategory(url),
-            IOS_LINK_URL: deeplink ? LINK_URL : null,
-            ANDROID_LINK_URL: deeplink ? LINK_URL : null,
-          };
-        });
-
-        const dedupedJSON = jsonData.reduce((acc, curr) => {
-          if (!acc.find(({ LINK_NAME }) => LINK_NAME === curr.LINK_NAME)) {
-            acc.push(curr);
-          }
-          return acc;
-        }, []);
-
-        const config = { quotes: true }
-        const csv = Papa.unparse(dedupedJSON, config);
-        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-        const filename = `LinkTable_${new Date().toDateString().replace(/  /g, '_')}`;
-        const link = document.createElement('a');
-        const url = URL.createObjectURL(blob);
-        link.setAttribute('href', url);
-        link.setAttribute('download', `${filename}.csv`);
-        link.style.visibility = 'hidden';
-        document.body.appendChild(link);
-        // link.click();
-        document.body.removeChild(link);
-
+        this.downloadCSV(linkTableData);
         this.update(anchors);
       } else {
         this.showError('No RILT Anchors Found');
@@ -252,9 +268,10 @@ import appConfig from './app-config.mjs';
       const url = '/inliner';
       const res = await fetch(url, { method: 'POST', body: html });
       const stuff = await res.text();
-      return JSON.parse(stuff)['HTML'];
+      return JSON.parse(stuff).HTML;
     },
 
+    // BETTER IMPLEMENTATION IN PROGRESS FOR CROPPING + ADDING HTML
     trimHTML(html) {
       const parser = new DOMParser();
       const doc = parser.parseFromString(html, 'text/html');
@@ -315,6 +332,7 @@ import appConfig from './app-config.mjs';
       }
       return result || html;
     },
+
   };
 
   app.init();
