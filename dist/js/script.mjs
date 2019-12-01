@@ -64,8 +64,8 @@ import appConfig from './app-config.mjs';
       if (this.validateInput()) {
         this.setInitialState();
         this.showLoader();
-        const output = await this.generateOutput();
-        setTimeout(this.showResults.bind(this, output));
+        const result = await this.generateOutput(this.state.html);
+        setTimeout(this.showResults.bind(this, result));
       } else {
         this.showError('Need some HTML first!');
       }
@@ -82,75 +82,67 @@ import appConfig from './app-config.mjs';
       return dom;
     },
 
-    extractRILTs(dom) {
-      return [...dom.querySelectorAll('a[rilt]')];
+    extract(dom, elm) {
+      return [...dom.querySelectorAll(elm)];
     },
 
-    extractClickthrus(dom) {
-      return [...dom.querySelectorAll('a[href*="${clickthrough"]')];
+    stringAll(arr) {
+      return arr.map(i => `'${i}'`);
     },
+
+    // const formLink = `\${form(${couponForm},${[...this.state.variables, ...supplementalVars]})}`;
 
     assignLinkProperties(a) {
+      const { deeplinkUrlExclusions, supplementalVars, couponForm } = appConfig;
       const url = a.getAttribute('href') || '#';
-      const branchURL = `https://joann.app.link/3p?%243p=e_rs&%24original_url=${encodeURIComponent(url)}`;
+      const branchUrl = `https://joann.app.link/3p?%243p=e_rs&%24original_url=${encodeURIComponent(url)}`;
       const isCouponLink = url.includes('coupon.html');
-      const { deeplinkUrlExclusions } = appConfig;
       const urlContainsExclusion = deeplinkUrlExclusions.some(excl => url.includes(excl));
+      const formData = [...this.state.variables, ...supplementalVars];
       const deeplink = !isCouponLink && !urlContainsExclusion && url.includes('joann.com');
-      const formName = '!MASTER_COUPON_LP';
-      const couponVars = [];
-      let LINK_URL;
-      let formLink;
-
-      for (let i = 1; i <= this.state.barcodes; i += 1) {
-        couponVars.push(`BARCODE${i}`);
-      }
-
-      formLink = `\${form(${formName},${[...this.state.variables, ...couponVars]})}`;
-      LINK_URL = deeplink ? branchURL : isCouponLink ? formLink : url;
+      const formLink = `\${form('${couponForm}',${[...this.stringAll(formData)]})}`;
+      const linkUrl = deeplink ? branchUrl : isCouponLink ? formLink : url;
 
       return {
         LINK_NAME: a.getAttribute('rilt'),
-        LINK_URL,
+        LINK_URL: linkUrl,
         LINK_CATEGORY: this.getLinkCategory(url),
-        IOS_LINK_URL: deeplink ? LINK_URL : null,
-        ANDROID_LINK_URL: deeplink ? LINK_URL : null,
+        IOS_LINK_URL: deeplink ? linkUrl : null,
+        ANDROID_LINK_URL: deeplink ? linkUrl : null,
       };
     },
 
-    downloadCSV(tableData, name = 'LinkTable') {
+    downloadCSV(tableData, name) {
       const config = { quotes: true };
       const csv = Papa.unparse(tableData, config);
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-      const filename = `${name}_${new Date().toDateString().replace(/  /g, '_')}`;
+      const filename = `${name}_${new Date().toDateString().replace(/ /g, '_')}`;
       const link = document.createElement('a');
       const url = URL.createObjectURL(blob);
       link.setAttribute('href', url);
       link.setAttribute('download', `${filename}.csv`);
       link.style.visibility = 'hidden';
       document.body.appendChild(link);
-      // link.click();
+      link.click();
       document.body.removeChild(link);
     },
 
-    async generateOutput() {
-      const doc = this.createDOM(this.state.html);
-      const anchors = this.extractRILTs(doc);
-      const clickthroughs = this.extractClickthrus(doc);
+    async generateOutput(input) {
+      const doc = this.createDOM(input);
+      const rilts = this.extract(doc, 'a[rilt]');
+      const clickthroughs = this.extract(doc, 'a[href*="${clickthrough"]');
       let html;
 
-      if (anchors.length) {
-        const linkTableData = anchors
-          .map(this.assignLinkProperties.bind(this))
-          .reduce((acc, curr) => {
-            if (!acc.find(({ LINK_NAME }) => LINK_NAME === curr.LINK_NAME)) {
-              acc.push(curr);
-            }
-            return acc;
-          }, []);
-
-        this.downloadCSV(linkTableData);
-        this.update(anchors);
+      if (rilts.length) {
+        const linkTableData = rilts.map(this.assignLinkProperties.bind(this))
+        const dedupedLinkTableData = linkTableData.reduce((acc, curr) => {
+          if (!acc.find(({ LINK_NAME }) => LINK_NAME === curr.LINK_NAME)) {
+            acc.push(curr);
+          }
+          return acc;
+        }, []);
+        this.downloadCSV(dedupedLinkTableData, 'LinkTable');
+        this.update(rilts);
       } else {
         this.showError('No RILT Anchors Found');
       }
@@ -185,34 +177,36 @@ import appConfig from './app-config.mjs';
     update(arr, name = null, coupon = false) {
       arr.forEach((anchor) => {
         const linkName = anchor.getAttribute('rilt') || name;
-        const href = anchor.getAttribute('href') || '#';
-        const isCoupon = (href.includes('coupon') && href.includes('.html')) ||
-          href.includes(`'BARCODE1='+BARCODE1`) ||
+        const url = anchor.getAttribute('href') || '#';
+        const isCoupon = (url.includes('coupon') && url.includes('.html')) ||
+          url.includes(`'BARCODE1='+BARCODE1`) ||
           coupon;
 
         if (isCoupon) {
-          const couponClickthrough = this.createClickthrough(linkName, href, true);
+          const couponClickthrough = this.createClickthrough(linkName, true);
           anchor.setAttribute('href', couponClickthrough);
         } else {
-          const clickthrough = this.createClickthrough(linkName, href);
+          const clickthrough = this.createClickthrough(linkName);
           anchor.setAttribute('href', clickthrough);
         }
       });
     },
 
-    createClickthrough(linkName, href, coupon = false) {
+    createClickthrough(linkName, coupon = false) {
       const trackingParams = [
-        `'utm_term=${linkName}'`,
-        "'EMAIL_SHA256_HASH_'",
-        "'DWID'",
+        `utm_term=${linkName}`,
+        'EMAIL_SHA256_HASH_',
+        'DWID',
       ];
+      const { supplementalVars } = appConfig;
+      const suppData = [];
+
       if (coupon) {
-        for (let i = 1; i <= this.state.barcodes; i += 1) {
-          trackingParams.push(`'BARCODE${i}='+BARCODE${i}`);
-        }
-        this.state.variables.forEach(i => trackingParams.push(`'${i}'`));
+        suppData.push(...supplementalVars.map(i => `'${i}='+${i}`));
+        trackingParams.push(...this.state.variables);
       }
-      return `\${clickthrough('${linkName}',${[...trackingParams]})}`;
+
+      return `\${clickthrough('${linkName}',${[...this.stringAll(trackingParams), ...suppData]})}`;
     },
 
     addEntities(html) {

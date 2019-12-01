@@ -34,6 +34,23 @@ const appConfig = {
     'BODY',
   ],
 
+  supplementalVars: [
+    'BARCODE1',
+    'BARCODE2',
+    'BARCODE3',
+    'BARCODE4',
+    'BARCODE5',
+    'BARCODE6',
+    'BARCODE7',
+    'BARCODE8',
+    'BARCODE9',
+    'BARCODE10',
+    'BARCODE11',
+    'BARCODE12',
+  ],
+
+  couponForm: '!MASTER_COUPON_LP',
+
   deeplinkUrlExclusions: [
     'clickthrough',
     'cpn=',
