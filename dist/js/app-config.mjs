@@ -1,6 +1,5 @@
 const appConfig = {
   variables: [
-    'pooooo',
     'NAME',
     'GS_BARCODE',
     'PROMOCODE',
@@ -50,6 +49,8 @@ const appConfig = {
   ],
 
   couponForm: '!MASTER_COUPON_LP',
+
+  branch: 'https://joann.app.link/3p?%243p=e_rs&%24original_url=',
 
   deeplinkUrlExclusions: [
     'clickthrough',

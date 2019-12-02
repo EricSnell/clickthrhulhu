@@ -90,18 +90,18 @@ import appConfig from './app-config.mjs';
       return arr.map(i => `'${i}'`);
     },
 
-    // const formLink = `\${form(${couponForm},${[...this.state.variables, ...supplementalVars]})}`;
-
     assignLinkProperties(a) {
-      const { deeplinkUrlExclusions, supplementalVars, couponForm } = appConfig;
+      // eslint-disable-next-line object-curly-newline
+      const { branch, deeplinkUrlExclusions, supplementalVars, couponForm } = appConfig;
       const url = a.getAttribute('href') || '#';
-      const branchUrl = `https://joann.app.link/3p?%243p=e_rs&%24original_url=${encodeURIComponent(url)}`;
+      const branchedUrl = `${branch}${encodeURIComponent(url)}`;
       const isCouponLink = url.includes('coupon.html');
       const urlContainsExclusion = deeplinkUrlExclusions.some(excl => url.includes(excl));
       const formData = [...this.state.variables, ...supplementalVars];
       const deeplink = !isCouponLink && !urlContainsExclusion && url.includes('joann.com');
       const formLink = `\${form('${couponForm}',${[...this.stringAll(formData)]})}`;
-      const linkUrl = deeplink ? branchUrl : isCouponLink ? formLink : url;
+      // eslint-disable-next-line no-nested-ternary
+      const linkUrl = deeplink ? branchedUrl : isCouponLink ? formLink : url;
 
       return {
         LINK_NAME: a.getAttribute('rilt'),
@@ -127,6 +127,17 @@ import appConfig from './app-config.mjs';
       document.body.removeChild(link);
     },
 
+    createLinkTableData(arr) {
+      const linkTableData = arr.map(this.assignLinkProperties.bind(this));
+      const dedupedLinkTableData = linkTableData.reduce((acc, curr) => {
+        if (!acc.find(({ LINK_NAME }) => LINK_NAME === curr.LINK_NAME)) {
+          acc.push(curr);
+        }
+        return acc;
+      }, []);
+      return dedupedLinkTableData;
+    },
+
     async generateOutput(input) {
       const doc = this.createDOM(input);
       const rilts = this.extract(doc, 'a[rilt]');
@@ -134,14 +145,8 @@ import appConfig from './app-config.mjs';
       let html;
 
       if (rilts.length) {
-        const linkTableData = rilts.map(this.assignLinkProperties.bind(this))
-        const dedupedLinkTableData = linkTableData.reduce((acc, curr) => {
-          if (!acc.find(({ LINK_NAME }) => LINK_NAME === curr.LINK_NAME)) {
-            acc.push(curr);
-          }
-          return acc;
-        }, []);
-        this.downloadCSV(dedupedLinkTableData, 'LinkTable');
+        const linkTableData = this.createLinkTableData(rilts);
+        this.downloadCSV(linkTableData, 'LinkTable');
         this.update(rilts);
       } else {
         this.showError('No RILT Anchors Found');
@@ -179,26 +184,20 @@ import appConfig from './app-config.mjs';
         const linkName = anchor.getAttribute('rilt') || name;
         const url = anchor.getAttribute('href') || '#';
         const isCoupon = (url.includes('coupon') && url.includes('.html')) ||
-          url.includes(`'BARCODE1='+BARCODE1`) ||
+          url.includes('BARCODE1=') ||
           coupon;
-
-        if (isCoupon) {
-          const couponClickthrough = this.createClickthrough(linkName, true);
-          anchor.setAttribute('href', couponClickthrough);
-        } else {
-          const clickthrough = this.createClickthrough(linkName);
-          anchor.setAttribute('href', clickthrough);
-        }
+        const clickthrough = this.createClickthrough(linkName, isCoupon);
+        anchor.setAttribute('href', clickthrough);
       });
     },
 
     createClickthrough(linkName, coupon = false) {
+      const { supplementalVars } = appConfig;
       const trackingParams = [
         `utm_term=${linkName}`,
         'EMAIL_SHA256_HASH_',
         'DWID',
       ];
-      const { supplementalVars } = appConfig;
       const suppData = [];
 
       if (coupon) {
