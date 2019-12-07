@@ -123,7 +123,7 @@ import appConfig from './app-config.mjs';
       link.setAttribute('download', `${filename}.csv`);
       link.style.visibility = 'hidden';
       document.body.appendChild(link);
-      link.click();
+      // link.click();
       document.body.removeChild(link);
     },
 
@@ -191,7 +191,7 @@ import appConfig from './app-config.mjs';
       });
     },
 
-    createClickthrough(linkName, coupon = false) {
+    createClickthrough(linkName, form = false) {
       const { supplementalVars } = appConfig;
       const trackingParams = [
         `utm_term=${linkName}`,
@@ -200,7 +200,7 @@ import appConfig from './app-config.mjs';
       ];
       const suppData = [];
 
-      if (coupon) {
+      if (form) {
         suppData.push(...supplementalVars.map(i => `'${i}='+${i}`));
         trackingParams.push(...this.state.variables);
       }
