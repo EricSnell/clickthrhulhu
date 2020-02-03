@@ -31,6 +31,9 @@ const appConfig = {
     'BANNERGROUP2',
     'BANNERGROUP3',
     'BODY',
+    'ORCE_ID',
+    'ORCE_FLAG',
+    'JOANN_SMILES_REWARDNO',
   ],
 
   supplementalVars: [
