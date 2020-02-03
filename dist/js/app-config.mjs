@@ -52,7 +52,7 @@ const appConfig = {
 
   ],
 
-  couponForm: '!MASTER_COUPON_LP',
+  couponForm: '!MASTER_COUPON_LP_PROMO_2020_ORCE',
 
   branch: 'https://joann.app.link/3p?%243p=e_rs&%24original_url=',
 
