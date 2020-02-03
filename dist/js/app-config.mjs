@@ -34,9 +34,6 @@ const appConfig = {
     'ORCE_ID',
     'ORCE_FLAG',
     'JOANN_SMILES_REWARDNO',
-  ],
-
-  supplementalVars: [
     'BARCODE1',
     'BARCODE2',
     'BARCODE3',
@@ -49,6 +46,10 @@ const appConfig = {
     'BARCODE10',
     'BARCODE11',
     'BARCODE12',
+  ],
+
+  supplementalVars: [
+
   ],
 
   couponForm: '!MASTER_COUPON_LP',
