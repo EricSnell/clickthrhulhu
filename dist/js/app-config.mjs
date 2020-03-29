@@ -48,9 +48,7 @@ const appConfig = {
     'BARCODE12',
   ],
 
-  supplementalVars: [
-
-  ],
+  supplementalVars: [],
 
   couponForm: '!MASTER_COUPON_LP_PROMO_2020_ORCE',
 
@@ -61,6 +59,7 @@ const appConfig = {
     'cpn=',
     'sewing-studio',
     '/projects',
+    'how-to-make',
   ],
 
   htmlModules: {
