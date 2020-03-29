@@ -26,7 +26,7 @@
   "devDependencies": {
     "autoprefixer": "^7.2.5",
     "concat": "^1.0.3",
-    "eslint": "^4.15.0",
+    "eslint": "^4.18.2",
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-import": "^2.8.0",
     "node-sass": "^4.7.2",
