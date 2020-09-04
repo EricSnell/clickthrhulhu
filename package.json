@@ -40,6 +40,6 @@
     "netlify-cli": "^2.40.0",
     "netlify-lambda": "^1.6.3",
     "node-fetch": "^2.6.0",
-    "papaparse": "^5.1.0"
+    "papaparse": "^5.2.0"
   }
 }
