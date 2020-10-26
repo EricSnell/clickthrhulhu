@@ -157,7 +157,8 @@ import appConfig from './app-config.mjs';
         this.find('Btm_Nav_Coupon', clickthroughs, true, this.update.bind(this));
       }
 
-      html = await this.inlineCSS(doc.documentElement.outerHTML);
+      html = doc.documentElement.outerHTML;
+      // html = await this.inlineCSS(doc.documentElement.outerHTML); */ temporarily deactivated inliner */
       // html = this.$crop.checked ? this.trimHTML(html) : html;
       // html = this.$ai.checked ? this.addHTML(html) : html;
       return this.addEntities(html);
@@ -352,13 +353,13 @@ import appConfig from './app-config.mjs';
   <a id="red" rilt="some_coupon" href="coupon.html" style="color:red;" >coupon page</a>
   <a rilt="some_link" href="${clickthrough('some_link','utm_term=some_link','EMAIL_SHA256_HASH_','DWID')}">joann homepage</a>
   <a rilt="other_link1" href="that.com">creativebug</a>
-	<!-- module 11 -->
-	<a rilt="other_link2" href="someplace.com" >creativebug</a>
-	<!-- module 3 -->
-	<a rilt="other_link3" href="anotherplace.com">creativebug</a>
-	<!-- module 11 -->
-	<a rilt="other_link4" href="whatplace.com">creativebug</a>
-	<!-- module 11 -->
+  <!-- module 11 -->
+  <a rilt="other_link2" href="someplace.com" >creativebug</a>
+  <!-- module 3 -->
+  <a rilt="other_link3" href="anotherplace.com">creativebug</a>
+  <!-- module 11 -->
+  <a rilt="other_link4" href="whatplace.com">creativebug</a>
+  <!-- module 11 -->
 <a rilt="other_link5" href="whatplace.com/cpn=sup">creativebug & ®' &reg; &ndash; - ¢ &cent;</a>
   </td></tr></table>
   <!--/container-->

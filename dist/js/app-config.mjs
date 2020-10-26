@@ -50,7 +50,7 @@ const appConfig = {
 
   supplementalVars: [],
 
-  couponForm: '!MASTER_COUPON_LP_PROMO_2020_ORCE',
+  couponForm: '!MASTER_COUPON_LP_PROMO_202008_ORCE',
 
   branch: 'https://joann.app.link/3p?%243p=e_rs&%24original_url=',
 
