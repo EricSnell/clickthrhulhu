@@ -157,8 +157,8 @@ import appConfig from './app-config.mjs';
         this.find('Btm_Nav_Coupon', clickthroughs, true, this.update.bind(this));
       }
 
-      html = doc.documentElement.outerHTML;
-      // html = await this.inlineCSS(doc.documentElement.outerHTML); */ temporarily deactivated inliner */
+      // html = doc.documentElement.outerHTML;
+      html = await this.inlineCSS(doc.documentElement.outerHTML); /* temporarily deactivated inliner */
       // html = this.$crop.checked ? this.trimHTML(html) : html;
       // html = this.$ai.checked ? this.addHTML(html) : html;
       return this.addEntities(html);
