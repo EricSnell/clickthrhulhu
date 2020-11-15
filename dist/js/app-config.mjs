@@ -63,19 +63,7 @@ const appConfig = {
   ],
 
   htmlModules: {
-    ai: `<!-- START AI CONTAINER -->
-    <table align="center" border="0" cellspacing="0" cellpadding="0" style="width:100%;border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%;" >
-    <tbody>
-    <tr>
-    <td style="padding-top:20px;mso-line-height-rule:exactly;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%;border-collapse:collapse;" >
-        <#if TESTGROUP =='AI'>
-            <#include 'cms://contentlibrary/!masterbanners/jas_oracle_ai_3rec_v2.htm'>
-        </#if>
-    </td>
-    </tr>
-    </tbody>
-    </table>
-    <!-- END AI CONTAINER -->`,
+
   },
 };
 
