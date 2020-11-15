@@ -245,6 +245,10 @@ label:hover {
   padding: 20px 0;
 }
 
+#button--sm {
+  display: inline-block;
+}
+
 button {
   display: block;
   margin: 15px auto 0;
