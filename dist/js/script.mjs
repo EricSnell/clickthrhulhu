@@ -33,11 +33,19 @@ import appConfig from './app-config.mjs';
       this.$ai = document.getElementById('ai-checkbox');
       this.$logo = Array.from(document.getElementsByClassName('cthulhu'));
       this.$form = document.getElementById('code-form');
+      this.$trackingParamsList = document.getElementById('settings-menu_trackinglist');
+      this.$variableList = document.getElementById('settings-menu_variablelist');
+      this.$addVarBtn = document.getElementById('btn_add-variable');
+      this.$addTrackingBtn = document.getElementById('btn_add-tracking');
+      this.$variableInput = document.getElementById('settings-menu_variableinput');
+      this.$trackingInput = document.getElementById('settings-menu_trackinginput');
     },
 
     bindEvents() {
       this.$btn.addEventListener('click', this.run.bind(this));
       this.$resetBtn.addEventListener('click', this.reset.bind(this));
+      this.$addVarBtn.addEventListener('click', this.addVariable.bind(this));
+      this.$addTrackingBtn.addEventListener('click', this.addTracking.bind(this));
     },
 
     setInitialState() {
@@ -45,10 +53,9 @@ import appConfig from './app-config.mjs';
         html: this.$code.getValue(),
         barcodes: this.$barcodes.value,
         variables: this.$vars.value ?
-          this.$vars.value.toUpperCase().replace(/ /g, '').split(',')
-          : [],
+          [...this.$vars.value.toUpperCase().replace(/ /g, '').split(','), ...this.state.variables]
+          : [...this.state.variables],
       });
-      this.addCommonVars();
     },
 
     addCommonVars() {
@@ -251,6 +258,34 @@ import appConfig from './app-config.mjs';
       this.$btn.style.opacity = '1';
       this.$btn.disabled = false;
       console.clear();
+    },
+
+    addVariable() {
+      let newVariable = this.$variableInput.value;
+      if (!newVariable) return;
+      this.state = Object.assign(this.state, {
+        variables: [
+          ...this.state.variables,
+          newVariable
+        ],
+      });
+      this.$variableInput.value = '';
+      this.addElement('li', newVariable, 'settings-menu_variablelist', this.$variableList);
+    },
+
+    addElement(type, text, className, parent) {
+      const elm = document.createElement(type);
+      elm.textContent = text;
+      elm.classList = className;
+      parent.appendChild(elm);
+    },
+
+    addTracking() {
+      alert('adding tracking');
+    },
+
+    updateLocalStorage() {
+
     },
 
     showError(msg) {
