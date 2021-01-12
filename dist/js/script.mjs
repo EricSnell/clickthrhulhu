@@ -18,6 +18,7 @@ import appConfig from './app-config.mjs';
       this.cacheDOM();
       this.bindEvents();
       this.reset();
+      this.updateLocalStorage(appConfig);
     },
 
     cacheDOM() {
@@ -282,8 +283,10 @@ import appConfig from './app-config.mjs';
       alert('adding tracking');
     },
 
-    updateLocalStorage() {
-
+    updateLocalStorage(config) {
+      let keys = Object.keys(config);
+      keys.forEach(key => localStorage.setItem(JSON.stringify(key), JSON.stringify(config[key])));
+      console.log('storage>>>>', localStorage);
     },
 
     showError(msg) {

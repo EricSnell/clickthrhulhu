@@ -62,9 +62,6 @@ const appConfig = {
     'how-to-make',
   ],
 
-  htmlModules: {
-
-  },
 };
 
 export default appConfig;
