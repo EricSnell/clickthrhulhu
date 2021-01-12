@@ -1,9 +1,10 @@
+/* eslint-disable prefer-const */
 import codeMirrorConfig from './codemirror-config.mjs';
 import linkCategories from './link-categories.mjs';
 import appConfig from './app-config.mjs';
 
 (function main() {
-  const app = {
+  const App = {
 
     codeMirrorConfig,
 
@@ -20,6 +21,7 @@ import appConfig from './app-config.mjs';
     },
 
     cacheDOM() {
+      // eslint-disable-next-line no-undef
       this.$code = CodeMirror.fromTextArea(document.getElementById('code'), this.codeMirrorConfig);
       [this.$codeMirror] = document.getElementsByClassName('CodeMirror');
       this.$app = document.getElementById('app-input');
@@ -29,8 +31,6 @@ import appConfig from './app-config.mjs';
       this.$options = document.getElementById('options-inner');
       this.$barcodes = document.getElementById('barcodes-dropdown');
       this.$vars = document.getElementById('variables-input');
-      this.$crop = document.getElementById('crop-html-checkbox');
-      this.$ai = document.getElementById('ai-checkbox');
       this.$logo = Array.from(document.getElementsByClassName('cthulhu'));
       this.$form = document.getElementById('code-form');
       this.$trackingParamsList = document.getElementById('settings-menu_trackinglist');
@@ -71,7 +71,7 @@ import appConfig from './app-config.mjs';
       if (this.validateInput()) {
         this.setInitialState();
         this.showLoader();
-        const result = await this.generateOutput(this.state.html);
+        let result = await this.generateOutput(this.state.html);
         setTimeout(this.showResults.bind(this, result));
       } else {
         this.showError('Need some HTML first!');
@@ -79,13 +79,13 @@ import appConfig from './app-config.mjs';
     },
 
     validateInput() {
-      const input = this.$code.getValue();
+      let input = this.$code.getValue();
       return input;
     },
 
     createDOM(htmlString) {
-      const parser = new DOMParser();
-      const dom = parser.parseFromString(htmlString, 'text/html');
+      let parser = new DOMParser();
+      let dom = parser.parseFromString(htmlString, 'text/html');
       return dom;
     },
 
@@ -99,16 +99,16 @@ import appConfig from './app-config.mjs';
 
     assignLinkProperties(a) {
       // eslint-disable-next-line object-curly-newline
-      const { branch, deeplinkUrlExclusions, supplementalVars, couponForm } = appConfig;
-      const url = a.getAttribute('href') || '#';
-      const branchedUrl = `${branch}${encodeURIComponent(url)}`;
-      const isCouponLink = url.includes('coupon.html');
-      const urlContainsExclusion = deeplinkUrlExclusions.some(excl => url.includes(excl));
-      const formData = [...this.state.variables, ...supplementalVars];
-      const deeplink = !isCouponLink && !urlContainsExclusion && url.includes('joann.com');
-      const formLink = `\${form('${couponForm}',${[...this.stringAll(formData)]})}`;
+      let { branch, deeplinkUrlExclusions, supplementalVars, couponForm } = appConfig;
+      let url = a.getAttribute('href') || '#';
+      let branchedUrl = `${branch}${encodeURIComponent(url)}`;
+      let isCouponLink = url.includes('coupon.html');
+      let urlContainsExclusion = deeplinkUrlExclusions.some(excl => url.includes(excl));
+      let formData = [...this.state.variables, ...supplementalVars];
+      let deeplink = !isCouponLink && !urlContainsExclusion && url.includes('joann.com');
+      let formLink = `\${form('${couponForm}',${[...this.stringAll(formData)]})}`;
       // eslint-disable-next-line no-nested-ternary
-      const linkUrl = deeplink ? branchedUrl : isCouponLink ? formLink : url;
+      let linkUrl = deeplink ? branchedUrl : isCouponLink ? formLink : url;
 
       return {
         LINK_NAME: a.getAttribute('rilt'),
@@ -120,12 +120,13 @@ import appConfig from './app-config.mjs';
     },
 
     downloadCSV(tableData, name) {
-      const config = { quotes: true };
-      const csv = Papa.unparse(tableData, config);
-      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-      const filename = `${name}_${new Date().toDateString().replace(/ /g, '_')}`;
-      const link = document.createElement('a');
-      const url = URL.createObjectURL(blob);
+      let config = { quotes: true };
+      // eslint-disable-next-line no-undef
+      let csv = Papa.unparse(tableData, config);
+      let blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      let filename = `${name}_${new Date().toDateString().replace(/ /g, '_')}`;
+      let link = document.createElement('a');
+      let url = URL.createObjectURL(blob);
       link.setAttribute('href', url);
       link.setAttribute('download', `${filename}.csv`);
       link.style.visibility = 'hidden';
@@ -135,8 +136,8 @@ import appConfig from './app-config.mjs';
     },
 
     createLinkTableData(arr) {
-      const linkTableData = arr.map(this.assignLinkProperties.bind(this));
-      const dedupedLinkTableData = linkTableData.reduce((acc, curr) => {
+      let linkTableData = arr.map(this.assignLinkProperties.bind(this));
+      let dedupedLinkTableData = linkTableData.reduce((acc, curr) => {
         if (!acc.find(({ LINK_NAME }) => LINK_NAME === curr.LINK_NAME)) {
           acc.push(curr);
         }
@@ -146,13 +147,13 @@ import appConfig from './app-config.mjs';
     },
 
     async generateOutput(input) {
-      const doc = this.createDOM(input);
-      const rilts = this.extract(doc, 'a[rilt]');
-      const clickthroughs = this.extract(doc, 'a[href*="${clickthrough"]');
+      let doc = this.createDOM(input);
+      let rilts = this.extract(doc, 'a[rilt]');
+      let clickthroughs = this.extract(doc, 'a[href*="${clickthrough"]');
       let html;
 
       if (rilts.length) {
-        const linkTableData = this.createLinkTableData(rilts);
+        let linkTableData = this.createLinkTableData(rilts);
         this.downloadCSV(linkTableData, 'LinkTable');
         this.update(rilts);
       } else {
@@ -165,22 +166,20 @@ import appConfig from './app-config.mjs';
       }
 
       html = await this.inlineCSS(doc.documentElement.outerHTML);
-      // html = this.$crop.checked ? this.trimHTML(html) : html;
-      // html = this.$ai.checked ? this.addHTML(html) : html;
       return this.addEntities(html);
     },
 
     getLinkCategory(url) {
       // eslint-disable-next-line no-restricted-syntax
-      for (const i in linkCategories) {
+      for (let i in linkCategories) {
         if (url.includes(i)) return linkCategories[i];
       }
       return null;
     },
 
     find(name, loc, coupon = false, callback) {
-      const itemArr = loc.filter((anchor) => {
-        const href = anchor.getAttribute('href');
+      let itemArr = loc.filter((anchor) => {
+        let href = anchor.getAttribute('href');
         return href.includes(name);
       });
       callback(itemArr, name, coupon);
@@ -188,24 +187,24 @@ import appConfig from './app-config.mjs';
 
     update(arr, name = null, coupon = false) {
       arr.forEach((anchor) => {
-        const linkName = anchor.getAttribute('rilt') || name;
-        const url = anchor.getAttribute('href') || '#';
-        const isCoupon = (url.includes('coupon') && url.includes('.html')) ||
+        let linkName = anchor.getAttribute('rilt') || name;
+        let url = anchor.getAttribute('href') || '#';
+        let isCoupon = (url.includes('coupon') && url.includes('.html')) ||
           url.includes('BARCODE1=') ||
           coupon;
-        const clickthrough = this.createClickthrough(linkName, isCoupon);
+        let clickthrough = this.createClickthrough(linkName, isCoupon);
         anchor.setAttribute('href', clickthrough);
       });
     },
 
     createClickthrough(linkName, form = false) {
-      const { supplementalVars } = appConfig;
-      const trackingParams = [
+      let { supplementalVars } = appConfig;
+      let trackingParams = [
         `utm_term=${linkName}`,
         'EMAIL_SHA256_HASH_',
         'DWID',
       ];
-      const suppData = [];
+      let suppData = [];
 
       if (form) {
         suppData.push(...supplementalVars.map(i => `'${i}='+${i}`));
@@ -216,7 +215,7 @@ import appConfig from './app-config.mjs';
     },
 
     addEntities(html) {
-      const entities = {
+      let entities = {
         '®': '&reg;',
         '™': '&trade;',
         '″': '&Prime;',
@@ -227,7 +226,7 @@ import appConfig from './app-config.mjs';
         '—': '&#8212;',
         '¢': '&cent;',
       };
-      const regex = new RegExp(Object.keys(entities).join('|'), 'g');
+      let regex = new RegExp(Object.keys(entities).join('|'), 'g');
       return html.replace(regex, match => entities[match]);
     },
 
@@ -257,7 +256,6 @@ import appConfig from './app-config.mjs';
       this.$btn.style.display = 'block';
       this.$btn.style.opacity = '1';
       this.$btn.disabled = false;
-      console.clear();
     },
 
     addVariable() {
@@ -266,7 +264,7 @@ import appConfig from './app-config.mjs';
       this.state = Object.assign(this.state, {
         variables: [
           ...this.state.variables,
-          newVariable
+          newVariable,
         ],
       });
       this.$variableInput.value = '';
@@ -274,7 +272,7 @@ import appConfig from './app-config.mjs';
     },
 
     addElement(type, text, className, parent) {
-      const elm = document.createElement(type);
+      let elm = document.createElement(type);
       elm.textContent = text;
       elm.classList = className;
       parent.appendChild(elm);
@@ -293,77 +291,15 @@ import appConfig from './app-config.mjs';
     },
 
     async inlineCSS(html) {
-      const url = '/inliner';
-      const res = await fetch(url, { method: 'POST', body: html });
-      const stuff = await res.text();
+      let url = '/inliner';
+      let res = await fetch(url, { method: 'POST', body: html });
+      let stuff = await res.text();
       return JSON.parse(stuff).HTML;
-    },
-
-    // BETTER IMPLEMENTATION IN PROGRESS FOR CROPPING + ADDING HTML
-    trimHTML(html) {
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(html, 'text/html');
-      const treewalker = doc.createTreeWalker(
-        doc.body,
-        NodeFilter.SHOW_COMMENT,
-        {
-          acceptNode(node) {
-            return node.nodeValue !== 'container' ? NodeFilter.FILTER_SKIP : NodeFilter.FILTER_ACCEPT;
-          },
-        },
-        false,
-      );
-      treewalker.nextNode();
-      return treewalker.currentNode.nextElementSibling.outerHTML;
-    },
-
-    addHTML(html) {
-      const doc = this.createDOM(html);
-      const arr = [];
-      let result;
-      let target;
-      const { ai } = appConfig.html;
-      const frag = doc.createRange().createContextualFragment(ai);
-      const treewalker = doc.createTreeWalker(
-        doc,
-        NodeFilter.SHOW_COMMENT,
-        {
-          acceptNode(node) {
-            return node.nodeValue.includes('module') ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP;
-          },
-        },
-        false,
-      );
-
-      do {
-        arr.push(treewalker.currentNode);
-      } while (treewalker.nextNode());
-      arr.shift(); // removes body element from array
-      arr.reverse(); // put coupon modules first
-      for (let i = 0; i < arr.length; i += 1) {
-        // if there is a coupon module, we want to check that it's the last one before injecting the AI module
-        if (arr[i].nodeValue.includes('3') ||
-          arr[i].nodeValue.includes('3b') ||
-          arr[i].nodeValue.includes('6') ||
-          arr[i].nodeValue.includes('9')) {
-          if (!arr[i + 1].nodeValue.includes('3') &&
-            !arr[i + 1].nodeValue.includes('3b') &&
-            !arr[i + 1].nodeValue.includes('6') &&
-            !arr[i + 1].nodeValue.includes('9')) {
-            arr[i].nextElementSibling.classList.add('clickthrhulu__ai-target');
-            [target] = doc.querySelectorAll('.clickthrhulu__ai-target');
-            target.parentElement.insertBefore(frag, target);
-            result = doc.body.innerHTML.replace(/&gt;/g, '>').replace(/&lt;/g, '<').replace(/<!--#if-->/g, '</#if>');
-            break;
-          }
-        }
-      }
-      return result || html;
     },
 
   };
 
-  app.init();
+  App.init();
 }());
 
 /* test input
