@@ -14,11 +14,12 @@ import appConfig from './app-config.mjs';
       variables: [],
     },
 
-    init() {
+    init(config) {
       this.cacheDOM();
       this.bindEvents();
       this.reset();
-      this.updateLocalStorage(appConfig);
+      this.setLocalStorage(config);
+      this.addCommonVars();
     },
 
     cacheDOM() {
@@ -60,9 +61,10 @@ import appConfig from './app-config.mjs';
     },
 
     addCommonVars() {
+      let configVariables = JSON.parse(localStorage.getItem('variables'));
       this.state = Object.assign(this.state, {
         variables: [
-          ...appConfig.variables,
+          ...configVariables,
           ...this.state.variables,
         ],
       });
@@ -100,7 +102,7 @@ import appConfig from './app-config.mjs';
 
     assignLinkProperties(a) {
       // eslint-disable-next-line object-curly-newline
-      let { branch, deeplinkUrlExclusions, supplementalVars, couponForm } = appConfig;
+      let { branch, deeplinkUrlExclusions, supplementalVars, couponForm } = JSON.parse(localStorage);
       let url = a.getAttribute('href') || '#';
       let branchedUrl = `${branch}${encodeURIComponent(url)}`;
       let isCouponLink = url.includes('coupon.html');
@@ -283,10 +285,11 @@ import appConfig from './app-config.mjs';
       alert('adding tracking');
     },
 
-    updateLocalStorage(config) {
+    setLocalStorage(config) {
+
       let keys = Object.keys(config);
-      keys.forEach(key => localStorage.setItem(JSON.stringify(key), JSON.stringify(config[key])));
-      console.log('storage>>>>', localStorage);
+      keys.forEach(key => localStorage.setItem(key, JSON.stringify(config[key])));
+      console.log(localStorage);
     },
 
     showError(msg) {
@@ -302,7 +305,7 @@ import appConfig from './app-config.mjs';
 
   };
 
-  App.init();
+  App.init(appConfig);
 }());
 
 /* test input
