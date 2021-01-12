@@ -11,7 +11,7 @@ import appConfig from './app-config.mjs';
     state: {
       html: null,
       barcodes: null,
-      variables: [],
+      variables: JSON.parse(localStorage.getItem('variables')),
     },
 
     init(config) {
@@ -19,7 +19,7 @@ import appConfig from './app-config.mjs';
       this.bindEvents();
       this.reset();
       this.setLocalStorage(config);
-      this.addCommonVars();
+      this.setUserSettings();
     },
 
     cacheDOM() {
@@ -50,7 +50,7 @@ import appConfig from './app-config.mjs';
       this.$addTrackingBtn.addEventListener('click', this.addTracking.bind(this));
     },
 
-    setInitialState() {
+    setSessionState() {
       this.state = Object.assign({}, {
         html: this.$code.getValue(),
         barcodes: this.$barcodes.value,
@@ -59,20 +59,20 @@ import appConfig from './app-config.mjs';
           : [...this.state.variables],
       });
     },
-
-    addCommonVars() {
-      let configVariables = JSON.parse(localStorage.getItem('variables'));
-      this.state = Object.assign(this.state, {
-        variables: [
-          ...configVariables,
-          ...this.state.variables,
-        ],
-      });
-    },
-
+    /*
+        addCommonVars() {
+          let configVariables = JSON.parse(localStorage.getItem('variables'));
+          this.state = Object.assign(this.state, {
+            variables: [
+              ...configVariables,
+              ...this.state.variables,
+            ],
+          });
+        },
+    */
     async run() {
       if (this.validateInput()) {
-        this.setInitialState();
+        this.setSessionState();
         this.showLoader();
         let result = await this.generateOutput(this.state.html);
         setTimeout(this.showResults.bind(this, result));
@@ -102,7 +102,7 @@ import appConfig from './app-config.mjs';
 
     assignLinkProperties(a) {
       // eslint-disable-next-line object-curly-newline
-      let { branch, deeplinkUrlExclusions, supplementalVars, couponForm } = JSON.parse(localStorage);
+      let { branch, deeplinkUrlExclusions, supplementalVars, couponForm } = appConfig;
       let url = a.getAttribute('href') || '#';
       let branchedUrl = `${branch}${encodeURIComponent(url)}`;
       let isCouponLink = url.includes('coupon.html');
@@ -233,6 +233,17 @@ import appConfig from './app-config.mjs';
       return html.replace(regex, match => entities[match]);
     },
 
+    setUserSettings() {
+      this.state.variables.forEach((item) => {
+        this.addElement({
+          type: 'li',
+          text: item,
+          className: 'settings-menu_variablelist',
+          parent: this.$variableList,
+        })
+      });
+    },
+
     showLoader() {
       this.$code.setValue('');
       this.$options.style.opacity = '0';
@@ -271,10 +282,16 @@ import appConfig from './app-config.mjs';
         ],
       });
       this.$variableInput.value = '';
-      this.addElement('li', newVariable, 'settings-menu_variablelist', this.$variableList);
+      this.addElement({
+        type: 'li',
+        text: newVariable,
+        className: 'settings-menu_variablelist',
+        parent: this.$variableList,
+      });
     },
 
-    addElement(type, text, className, parent) {
+    // eslint-disable-next-line object-curly-newline
+    addElement({ type, text, className, parent }) {
       let elm = document.createElement(type);
       elm.textContent = text;
       elm.classList = className;
@@ -286,7 +303,6 @@ import appConfig from './app-config.mjs';
     },
 
     setLocalStorage(config) {
-
       let keys = Object.keys(config);
       keys.forEach(key => localStorage.setItem(key, JSON.stringify(config[key])));
       console.log(localStorage);
@@ -328,7 +344,7 @@ import appConfig from './app-config.mjs';
   <tr><td>
   <a id="red" rilt="some_coupon" href="coupon.html" style="color:red;" >coupon page</a>
   <a rilt="some_link" href="${clickthrough('some_link','utm_term=some_link','EMAIL_SHA256_HASH_','DWID')}">joann homepage</a>
-  <a rilt="other_link1" href="that.com">creativebug</a>
+  <a rilt="other_link1" href="https://www.joann.com">creativebug</a>
   <!-- module 11 -->
   <a rilt="other_link2" href="someplace.com" >creativebug</a>
   <!-- module 3 -->
