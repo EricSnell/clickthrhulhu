@@ -218,6 +218,7 @@ label:hover {
 #settings-menu_variablelist {
   max-height: 18rem;
   overflow: scroll;
+  box-shadow: 13px 8px 15px 5px rgba(0, 0, 0, 0.2);
 }
 
 .settings-menu_variablelistitem {
