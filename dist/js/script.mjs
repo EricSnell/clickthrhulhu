@@ -1,3 +1,5 @@
+/* eslint-disable object-curly-newline */
+/* eslint-disable no-nested-ternary */
 /* eslint-disable no-console */
 /* eslint-disable prefer-const */
 import codeMirrorConfig from './codemirror-config.mjs';
@@ -96,7 +98,6 @@ const ClickthrhulhuApp = {
   },
 
   assignLinkProperties(a) {
-    // eslint-disable-next-line object-curly-newline
     let { branch, deeplinkUrlExclusions, supplementalVars, couponForm } = appConfig;
     let url = a.getAttribute('href') || '#';
     let branchedUrl = `${branch}${encodeURIComponent(url)}`;
@@ -105,7 +106,6 @@ const ClickthrhulhuApp = {
     let formData = [...this.state.variables, ...supplementalVars];
     let deeplink = !isCouponLink && !urlContainsExclusion && url.includes('joann.com');
     let formLink = `\${form('${couponForm}',${[...this.stringAll(formData)]})}`;
-    // eslint-disable-next-line no-nested-ternary
     let linkUrl = deeplink ? branchedUrl : isCouponLink ? formLink : url;
 
     return {
@@ -168,10 +168,14 @@ const ClickthrhulhuApp = {
   },
 
   getLinkCategory(url) {
-    // eslint-disable-next-line no-restricted-syntax
-    for (let i in linkCategories) {
-      if (url.includes(i)) return linkCategories[i];
-    }
+    let keys = Object.keys(linkCategories);
+    keys.forEach((item) => {
+      if (url.includes(item)) {
+        return linkCategories[item];
+      }
+      return null;
+    });
+
     return null;
   },
 
@@ -235,7 +239,7 @@ const ClickthrhulhuApp = {
         text: item,
         className: 'settings-menu_variablelist',
         parent: this.$variableList,
-      })
+      });
     });
   },
 
@@ -297,7 +301,7 @@ const ClickthrhulhuApp = {
   },
 
   addTracking() {
-    alert('adding tracking');
+    console.log('adding tracking');
   },
 
   setInitialLocalStorage(config) {
@@ -311,7 +315,7 @@ const ClickthrhulhuApp = {
   },
 
   showError(msg) {
-    return alert(msg);
+    console.log(msg);
   },
 
   async inlineCSS(html) {
