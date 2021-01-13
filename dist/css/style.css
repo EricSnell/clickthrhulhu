@@ -206,17 +206,41 @@ label:hover {
 }
 
 .settings-menu_variablelistitem {
+  position: relative;
   font-weight: 900;
   display: inline-block;
   background: #eee;
-  padding: 0.3rem 0.5rem;
-  margin: 0.5rem;
+  padding: 0.3rem 1.5rem;
+  margin: 0.7rem;
   border-bottom: 3px solid #eee;
 }
 
 .settings-menu_variablelistitem:hover {
   border-bottom-color: #02bd63;
   cursor: pointer;
+}
+
+.settings-menu_variablelistitem:hover .settings-menu_listitemdelete {
+  visibility: visible;
+}
+
+.settings-menu_listitemdelete {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  visibility: hidden;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 1rem;
+  font-size: 0.6rem;
+  height: 100%;
+  background: #333;
+  color: #fff;
+}
+
+.settings-menu_listitemdelete:hover {
+  background: red;
 }
 
 #code-container {

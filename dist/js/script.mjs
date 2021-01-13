@@ -240,8 +240,8 @@ const ClickthrhulhuApp = {
 
   updateUISettings() {
     this.state.variables.forEach((item) => {
-      this.addElement({
-        type: 'li',
+      this.addSettingsListItem({
+
         text: item,
         className: 'settings-menu_variablelistitem',
         parent: this.$variableList,
@@ -289,8 +289,7 @@ const ClickthrhulhuApp = {
       ],
     });
     this.$variableForm.elements['variable-input'].value = '';
-    this.addElement({
-      type: 'li',
+    this.addSettingsListItem({
       text: newVariable,
       className: 'settings-menu_variablelistitem',
       parent: this.$variableList,
@@ -299,10 +298,14 @@ const ClickthrhulhuApp = {
     console.log(localStorage);
   },
 
-  addElement({ type, text, className, parent }) {
-    let elm = document.createElement(type);
+  addSettingsListItem({ text, className, parent }) {
+    let elm = document.createElement('li');
+    let delIcon = document.createElement('span');
     elm.textContent = text;
     elm.classList = className;
+    delIcon.textContent = 'X';
+    delIcon.classList = 'settings-menu_listitemdelete';
+    elm.appendChild(delIcon);
     parent.appendChild(elm);
   },
 
