@@ -172,8 +172,10 @@ label:hover {
   left: 0;
   overflow: hidden;
   padding: 50px;
-  transform: translateY(-100%);
+  /* transform: translateY(-100%); */
+  visibility: hidden;
   transition: 0.15s transform ease-out;
+  animation: fadeOut 0.2s linear forwards;
   background: #333;
   z-index: 99;
   height: 100vh;
@@ -205,12 +207,9 @@ label:hover {
   left: -100000px; /*throw out the window */
 }
 
-#settings-checkbox:checked + #settings-icon {
-  transform: rotate(90deg);
-}
-
 #settings-checkbox:checked + #settings-menu {
-  transform: translateY(0%);
+  animation: fadeIn 0.2s linear forwards;
+  /*transform: translateY(0%);*/
 }
 
 .settings-menu_itemlist {
@@ -366,5 +365,29 @@ button:active {
 
   100% {
     transform: translateY(-25%);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    visibility: visible;
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+@keyframes fadeOut {
+  0% {
+    visibility: visible;
+    opacity: 1;
+  }
+  99% {
+    opacity: 0;
+  }
+  100% {
+    visibility: hidden;
   }
 }
