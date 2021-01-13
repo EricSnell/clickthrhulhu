@@ -157,7 +157,7 @@ label:hover {
   right: 0;
   left: 0;
   overflow: hidden;
-  padding: 50px;
+  padding: 50px 50px 0 50px;
   visibility: hidden;
   transition: 0.15s transform ease-out;
   animation: fadeOut 0.1s linear forwards;
@@ -254,6 +254,18 @@ label:hover {
   display: inline-block;
   color: #fff;
   font-weight: 900;
+}
+
+#settings-menu_footerimg {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 10vh;
+  background-image: url("../img/waves.gif");
+  height: 10vh;
+  background-position: center;
+  background-repeat: repeat;
 }
 
 #code-container {
