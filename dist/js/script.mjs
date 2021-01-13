@@ -18,7 +18,6 @@ const ClickthrhulhuApp = {
 
   state: {
     html: null,
-    barcodes: null,
     variables: JSON.parse(localStorage.getItem('variables')) || [],
   },
 
@@ -26,7 +25,7 @@ const ClickthrhulhuApp = {
     console.log('initializing app...');
     this.cacheDOM();
     this.bindEvents();
-    if (!localStorage.length) {
+    if (localStorage.length !== 5) { // implement more elegant local storage validation
       console.log('no storage...updating with config');
       this.setInitialLocalStorage(defaultConfig);
       this.state = Object.assign({}, this.state, {
@@ -68,7 +67,6 @@ const ClickthrhulhuApp = {
   setSessionState() {
     this.state = Object.assign({}, {
       html: this.$code.getValue(),
-      barcodes: this.$barcodes.value,
       variables: this.$vars.value ?
         [...this.$vars.value.toUpperCase().replace(/ /g, '').split(','), ...this.state.variables]
         : [...this.state.variables],
@@ -283,6 +281,7 @@ const ClickthrhulhuApp = {
     e.preventDefault();
     let newVariable = e.target.elements['variable-input'].value;
     if (!newVariable) return;
+    if (this.state.variables.includes(newVariable)) return;
     this.state = Object.assign(this.state, {
       variables: [
         ...this.state.variables,
@@ -300,7 +299,6 @@ const ClickthrhulhuApp = {
     console.log(localStorage);
   },
 
-  // eslint-disable-next-line object-curly-newline
   addElement({ type, text, className, parent }) {
     let elm = document.createElement(type);
     elm.textContent = text;
@@ -329,8 +327,8 @@ const ClickthrhulhuApp = {
   async inlineCSS(html) {
     let url = '/inliner';
     let res = await fetch(url, { method: 'POST', body: html });
-    let stuff = await res.text();
-    return JSON.parse(stuff).HTML;
+    let json = await res.text();
+    return JSON.parse(json).HTML;
   },
 };
 

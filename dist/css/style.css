@@ -37,7 +37,9 @@ header {
 }
 
 .cthulhu {
+  position: relative;
   width: 100%;
+  z-index: 100;
 }
 
 h1 {
@@ -168,7 +170,8 @@ label:hover {
   transform: translateY(-100%);
   transition: 0.15s transform ease-out;
   background: #333;
-  z-index: 1000;
+  z-index: 99;
+  height: 100vh;
 }
 
 #settings-menu ul {
