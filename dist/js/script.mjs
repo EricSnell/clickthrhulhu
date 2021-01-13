@@ -50,19 +50,32 @@ const ClickthrhulhuApp = {
     this.$vars = document.getElementById('variables-input');
     this.$logo = Array.from(document.getElementsByClassName('cthulhu'));
     this.$form = document.getElementById('code-form');
-    this.$trackingParamsList = document.getElementById('settings-menu_trackinglist');
+    // this.$trackingParamsList = document.getElementById('settings-menu_trackinglist');
+    // this.$trackingInput = document.getElementById('settings-menu_trackinginput');
+    // this.$addTrackingBtn = document.getElementById('btn_add-tracking');
     this.$variableList = document.getElementById('settings-menu_variablelist');
-    this.$addTrackingBtn = document.getElementById('btn_add-tracking');
     this.$variableForm = document.getElementById('settings-form-addvariable');
-    this.$trackingInput = document.getElementById('settings-menu_trackinginput');
+    this.$formName = document.getElementById('settings-menu_currentformname');
+    this.$formNameForm = document.getElementById('settings-form-updatename');
   },
 
   bindEvents() {
     this.$btn.addEventListener('click', this.run.bind(this));
     this.$resetBtn.addEventListener('click', this.reset.bind(this));
+    // this.$addTrackingBtn.addEventListener('click', this.addTracking.bind(this));
     this.$variableForm.addEventListener('submit', this.addVariable.bind(this));
     this.$variableList.addEventListener('click', this.handleVariableListClick.bind(this));
-    // this.$addTrackingBtn.addEventListener('click', this.addTracking.bind(this));
+    this.$formNameForm.addEventListener('submit', this.updateFormName.bind(this));
+  },
+
+  updateFormName(e) {
+    e.preventDefault();
+    let input = e.target.elements['formname-input'].value;
+    if (input) {
+      this.addToLocalStorage('couponForm', input);
+      e.target.elements['formname-input'].value = '';
+      this.updateUISettings();
+    }
   },
 
   setSessionState() {
@@ -136,7 +149,10 @@ const ClickthrhulhuApp = {
   },
 
   assignLinkProperties(a) {
-    let { branch, deeplinkUrlExclusions, supplementalVars, couponForm } = appConfig;
+    let branch = JSON.parse(localStorage.getItem('branch'));
+    let deeplinkUrlExclusions = JSON.parse(localStorage.getItem('deeplinkUrlExclusions'));
+    let supplementalVars = JSON.parse(localStorage.getItem('supplementalVars'));
+    let couponForm = JSON.parse(localStorage.getItem('couponForm'));
     let url = a.getAttribute('href') || '#';
     let branchedUrl = `${branch}${encodeURIComponent(url)}`;
     let isCouponLink = url.includes('coupon.html');
@@ -238,7 +254,7 @@ const ClickthrhulhuApp = {
   },
 
   createClickthrough(linkName, form = false) {
-    let { supplementalVars } = appConfig;
+    let supplementalVars = JSON.parse(localStorage.getItem('supplementalVars')) || [];
     let trackingParams = [
       `utm_term=${linkName}`,
       'EMAIL_SHA256_HASH_',
@@ -272,6 +288,8 @@ const ClickthrhulhuApp = {
 
   updateUISettings() {
     this.$variableList.innerHTML = '';
+    this.$formName.innerHTML = '';
+    this.$formName.innerText = JSON.parse(localStorage.getItem('couponForm'));
     this.state.variables.forEach((item) => {
       this.addSettingsListItem({
 

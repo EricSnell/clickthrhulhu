@@ -86,12 +86,21 @@
           </div>
           -->
           <div id="settings_inner-container">
-            <h2>Default Settings</h2>
+            <h2>Settings</h2>
           <div>
             <h3 class="settings-menu_header">Form Variables</h3>
             <form id="settings-form-addvariable">
               <input type="text" id="settings-menu_variableinput" name="variable-input" />
               <button type="submit" id="btn_add-variable" class="button--sm">ADD</button>
+            </form>
+            <ul id="settings-menu_variablelist" class="settings-menu_itemlist"></ul>
+          </div>
+          <div>
+            <h3 class="settings-menu_header">Form Name</h3>
+            <span id="settings-menu_currentformname"></span>
+            <form id="settings-form-updatename">
+              <input type="text" id="settings-menu_formnameinput" name="formname-input" />
+              <button type="submit" id="btn_update-formname" class="button--sm">UPDATE</button>
             </form>
             <ul id="settings-menu_variablelist" class="settings-menu_itemlist"></ul>
           </div>
