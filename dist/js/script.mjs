@@ -245,7 +245,7 @@ const ClickthrhulhuApp = {
       this.addElement({
         type: 'li',
         text: item,
-        className: 'settings-menu_variablelist',
+        className: 'settings-menu_variablelistitem',
         parent: this.$variableList,
       });
     });
@@ -293,7 +293,7 @@ const ClickthrhulhuApp = {
     this.addElement({
       type: 'li',
       text: newVariable,
-      className: 'settings-menu_variablelist',
+      className: 'settings-menu_variablelistitem',
       parent: this.$variableList,
     });
     this.addToLocalStorage('variables', this.state.variables);
