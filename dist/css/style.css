@@ -172,7 +172,7 @@ label:hover {
 }
 
 #settings_inner-container {
-  margin-top: 25vh;
+  margin-top: 20vh;
   overflow: scroll;
 }
 
@@ -209,6 +209,15 @@ label:hover {
 
 #settings-menu button:hover {
   transform: translateY(0);
+}
+
+#settings-form-addvariable {
+  margin-bottom: 1rem;
+}
+
+#settings-menu_variablelist {
+  max-height: 18rem;
+  overflow: scroll;
 }
 
 .settings-menu_variablelistitem {
