@@ -61,6 +61,7 @@ const ClickthrhulhuApp = {
     this.$btn.addEventListener('click', this.run.bind(this));
     this.$resetBtn.addEventListener('click', this.reset.bind(this));
     this.$variableForm.addEventListener('submit', this.addVariable.bind(this));
+    this.$variableList.addEventListener('click', this.handleVariableListClick.bind(this));
     this.$addTrackingBtn.addEventListener('click', this.addTracking.bind(this));
   },
 
@@ -87,6 +88,36 @@ const ClickthrhulhuApp = {
   validateInput() {
     let input = this.$code.getValue();
     return input;
+  },
+
+  handleVariableListClick(e) {
+    let elm = e.target;
+    switch (elm.className) {
+      case 'settings-menu_variablelistitem':
+        this.editListItem(elm);
+        break;
+      case 'settings-menu_listitemdelete':
+        this.deleteListItem(elm);
+        break;
+      default:
+        break;
+    }
+  },
+
+  editListItem(elm) {
+
+  },
+
+  deleteListItem(elm) {
+    let variableToDel = elm.parentElement.innerText;
+    if (this.state.variables.includes(variableToDel)) {
+      let filteredVars = this.state.variables.slice().filter((i) => {
+        return i !== variableToDel;
+      });
+      this.state = Object.assign({}, this.state, { variables: [...filteredVars] });
+      this.addToLocalStorage('variables', this.state.variables);
+      this.updateUISettings();
+    }
   },
 
   createDOM(htmlString) {
@@ -239,6 +270,7 @@ const ClickthrhulhuApp = {
   },
 
   updateUISettings() {
+    this.$variableList.innerHTML = '';
     this.state.variables.forEach((item) => {
       this.addSettingsListItem({
 
@@ -303,7 +335,6 @@ const ClickthrhulhuApp = {
     let delIcon = document.createElement('span');
     elm.textContent = text;
     elm.classList = className;
-    delIcon.textContent = 'X';
     delIcon.classList = 'settings-menu_listitemdelete';
     elm.appendChild(delIcon);
     parent.appendChild(elm);
