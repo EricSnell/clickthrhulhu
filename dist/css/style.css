@@ -31,9 +31,14 @@ header {
 }
 
 #logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   text-align: center;
   width: 13.5rem;
+  height: 25vh;
   margin: 0 auto;
+  overflow: hidden;
 }
 
 .cthulhu {
@@ -165,8 +170,8 @@ label:hover {
   top: 0;
   right: 0;
   left: 0;
+  overflow: hidden;
   padding: 50px;
-  background: yellow;
   transform: translateY(-100%);
   transition: 0.15s transform ease-out;
   background: #333;
@@ -174,10 +179,23 @@ label:hover {
   height: 100vh;
 }
 
+.settings-menu_header {
+  color: #fff;
+  margin-bottom: 0;
+}
+
+#settings_inner-container {
+  margin-top: 25vh;
+}
+
+#settings_inner-container h2 {
+  color: #fff;
+}
+
 #settings-menu ul {
   list-style-type: none;
   margin: 0;
-  padding: 0;
+  padding: 1rem 0;
   text-align: left;
   font-size: 13px;
 }
@@ -196,7 +214,7 @@ label:hover {
 }
 
 .settings-menu_itemlist {
-  margin-top: 20px;
+  margin: 20px 0 0 0;
 }
 
 #settings-menu button {
@@ -205,19 +223,21 @@ label:hover {
   padding: 2px 0;
 }
 
+#settings-menu button:hover {
+  transform: translateY(0);
+}
+
 .settings-menu_variablelistitem {
   position: relative;
   font-weight: 900;
   display: inline-block;
   background: #eee;
   padding: 0.3rem 1.5rem;
-  margin: 0.7rem;
-  border-bottom: 3px solid #eee;
+  margin: 0.7rem 0.7rem 0.7rem 0;
 }
 
 .settings-menu_variablelistitem:hover {
-  border-bottom-color: #02bd63;
-  cursor: pointer;
+  cursor: default;
 }
 
 .settings-menu_variablelistitem:hover .settings-menu_listitemdelete {
@@ -232,15 +252,14 @@ label:hover {
   position: absolute;
   top: 0;
   right: 0;
-  width: 1rem;
-  font-size: 0.6rem;
   height: 100%;
-  background: #222;
-  color: #fff;
+  width: 1rem;
+  background: #f3acac;
 }
 
 .settings-menu_listitemdelete:hover {
-  background: red;
+  cursor: pointer;
+  background: #de1e1d;
 }
 
 #code-container {

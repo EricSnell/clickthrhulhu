@@ -62,7 +62,7 @@ const ClickthrhulhuApp = {
     this.$resetBtn.addEventListener('click', this.reset.bind(this));
     this.$variableForm.addEventListener('submit', this.addVariable.bind(this));
     this.$variableList.addEventListener('click', this.handleVariableListClick.bind(this));
-    this.$addTrackingBtn.addEventListener('click', this.addTracking.bind(this));
+    // this.$addTrackingBtn.addEventListener('click', this.addTracking.bind(this));
   },
 
   setSessionState() {
@@ -105,15 +105,16 @@ const ClickthrhulhuApp = {
   },
 
   editListItem(elm) {
-
+    let variableToEdit = elm.innerText;
+    if (this.state.variables.includes(variableToEdit)) {
+      // COMING SOON
+    }
   },
 
   deleteListItem(elm) {
     let variableToDel = elm.parentElement.innerText;
     if (this.state.variables.includes(variableToDel)) {
-      let filteredVars = this.state.variables.slice().filter((i) => {
-        return i !== variableToDel;
-      });
+      let filteredVars = this.state.variables.filter(i => i !== variableToDel);
       this.state = Object.assign({}, this.state, { variables: [...filteredVars] });
       this.addToLocalStorage('variables', this.state.variables);
       this.updateUISettings();
