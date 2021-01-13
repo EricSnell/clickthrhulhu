@@ -88,8 +88,10 @@
           </div>
           <div>
             <h3 class="settings-menu_header">Form Variables</h3>
-            <input type="text" id="settings-menu_variableinput" />
-            <button id="btn_add-variable" class="button--sm">ADD</button>
+            <form id="settings-form-addvariable">
+              <input type="text" id="settings-menu_variableinput" name="variable-input" />
+              <button type="submit" id="btn_add-variable" class="button--sm">ADD</button>
+            </form>
             <ul id="settings-menu_variablelist" class="settings-menu_itemlist"></ul>
           </div>
         </section>

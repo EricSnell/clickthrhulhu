@@ -37,16 +37,15 @@ import appConfig from './app-config.mjs';
       this.$form = document.getElementById('code-form');
       this.$trackingParamsList = document.getElementById('settings-menu_trackinglist');
       this.$variableList = document.getElementById('settings-menu_variablelist');
-      this.$addVarBtn = document.getElementById('btn_add-variable');
       this.$addTrackingBtn = document.getElementById('btn_add-tracking');
-      this.$variableInput = document.getElementById('settings-menu_variableinput');
+      this.$variableForm = document.getElementById('settings-form-addvariable');
       this.$trackingInput = document.getElementById('settings-menu_trackinginput');
     },
 
     bindEvents() {
       this.$btn.addEventListener('click', this.run.bind(this));
       this.$resetBtn.addEventListener('click', this.reset.bind(this));
-      this.$addVarBtn.addEventListener('click', this.addVariable.bind(this));
+      this.$variableForm.addEventListener('submit', this.addVariable.bind(this));
       this.$addTrackingBtn.addEventListener('click', this.addTracking.bind(this));
     },
 
@@ -272,8 +271,9 @@ import appConfig from './app-config.mjs';
       this.$btn.disabled = false;
     },
 
-    addVariable() {
-      let newVariable = this.$variableInput.value;
+    addVariable(e) {
+      e.preventDefault();
+      let newVariable = e.target.elements['variable-input'].value;
       if (!newVariable) return;
       this.state = Object.assign(this.state, {
         variables: [
@@ -281,7 +281,7 @@ import appConfig from './app-config.mjs';
           newVariable,
         ],
       });
-      this.$variableInput.value = '';
+      this.$variableForm.elements['variable-input'].value = '';
       this.addElement({
         type: 'li',
         text: newVariable,
