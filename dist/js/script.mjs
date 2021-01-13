@@ -57,15 +57,28 @@ const ClickthrhulhuApp = {
     this.$variableForm = document.getElementById('settings-form-addvariable');
     this.$formName = document.getElementById('settings-menu_currentformname');
     this.$formNameForm = document.getElementById('settings-form-updatename');
+    this.$branchURL = document.getElementById('settings-menu_branchurl');
+    this.$branchURLForm = document.getElementById('settings-form-updatebranchurl');
   },
 
   bindEvents() {
     this.$btn.addEventListener('click', this.run.bind(this));
     this.$resetBtn.addEventListener('click', this.reset.bind(this));
     // this.$addTrackingBtn.addEventListener('click', this.addTracking.bind(this));
-    this.$variableForm.addEventListener('submit', this.addVariable.bind(this));
     this.$variableList.addEventListener('click', this.handleVariableListClick.bind(this));
+    this.$variableForm.addEventListener('submit', this.addVariable.bind(this));
     this.$formNameForm.addEventListener('submit', this.updateFormName.bind(this));
+    this.$branchURLForm.addEventListener('submit', this.updateBranchURL.bind(this));
+  },
+
+  updateBranchURL(e) {
+    e.preventDefault();
+    let input = e.target.elements['branchurl-input'].value;
+    if (input) {
+      this.addToLocalStorage('branch', input);
+      e.target.elements['branchurl-input'].value = '';
+      this.updateUISettings();
+    }
   },
 
   updateFormName(e) {
@@ -289,7 +302,9 @@ const ClickthrhulhuApp = {
   updateUISettings() {
     this.$variableList.innerHTML = '';
     this.$formName.innerHTML = '';
+    this.$branchURL.innerHTML = '';
     this.$formName.innerText = JSON.parse(localStorage.getItem('couponForm'));
+    this.$branchURL.innerText = JSON.parse(localStorage.getItem('branch'));
     this.state.variables.forEach((item) => {
       this.addSettingsListItem({
 

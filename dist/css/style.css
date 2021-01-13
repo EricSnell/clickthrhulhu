@@ -249,7 +249,8 @@ label:hover {
   background: #de1e1d;
 }
 
-#settings-menu_currentformname {
+#settings-menu_currentformname,
+#settings-menu_branchurl {
   margin-top: 1rem;
   display: inline-block;
   color: #fff;
@@ -266,6 +267,18 @@ label:hover {
   height: 10vh;
   background-position: center;
   background-repeat: repeat;
+  z-index: 120;
+}
+
+#settings-menu_footer-animation {
+  position: relative;
+  z-index: 110;
+  text-align: right;
+}
+
+#settings-menu_footer-animation img {
+  transform: scaleX(-1);
+  width: 14rem;
 }
 
 #code-container {
@@ -396,5 +409,14 @@ button:active {
   }
   100% {
     visibility: hidden;
+  }
+}
+
+@keyframes swim {
+  from {
+    transform: scaleX(-1);
+  }
+  to {
+    transform: scaleX(1);
   }
 }
