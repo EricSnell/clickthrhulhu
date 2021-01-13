@@ -14,14 +14,17 @@ const ClickthrhulhuApp = {
   },
 
   init(defaultConfig) {
-    console.log('initializing app...')
+    console.log('initializing app...');
     this.cacheDOM();
     this.bindEvents();
-    this.reset();
     if (!localStorage.length) {
       console.log('no storage...updating with config');
-      this.setLocalStorage(defaultConfig);
+      this.setInitialLocalStorage(defaultConfig);
+      this.state = Object.assign({}, this.state, {
+        variables: JSON.parse(localStorage.getItem('variables')),
+      });
     }
+    this.reset();
     this.updateUISettings();
   },
 
@@ -281,6 +284,8 @@ const ClickthrhulhuApp = {
       className: 'settings-menu_variablelist',
       parent: this.$variableList,
     });
+    this.addToLocalStorage('variables', this.state.variables);
+    console.log(localStorage);
   },
 
   // eslint-disable-next-line object-curly-newline
@@ -295,10 +300,14 @@ const ClickthrhulhuApp = {
     alert('adding tracking');
   },
 
-  setLocalStorage(config) {
+  setInitialLocalStorage(config) {
     let keys = Object.keys(config);
-    keys.forEach(key => localStorage.setItem(key, JSON.stringify(config[key])));
+    keys.forEach(key => this.addToLocalStorage(key, config[key]));
     console.log(localStorage);
+  },
+
+  addToLocalStorage(key, value) {
+    localStorage.setItem(key, JSON.stringify(value));
   },
 
   showError(msg) {
