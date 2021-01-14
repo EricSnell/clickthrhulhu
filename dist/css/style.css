@@ -173,7 +173,6 @@ label:hover {
 
 #settings_inner-container {
   margin-top: 20vh;
-  overflow: scroll;
 }
 
 #settings_inner-container h2 {
@@ -218,7 +217,7 @@ label:hover {
 #settings-menu_variablelist {
   max-height: 18rem;
   overflow: scroll;
-  box-shadow: 13px 8px 15px 5px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 10px 0 #111;
 }
 
 .settings-menu_variablelistitem {
