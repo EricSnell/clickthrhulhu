@@ -9,7 +9,7 @@ exports.handler = async (event, context) => {
   if (event.httpMethod !== 'POST') {
     return {
       statusCode: 200,
-      body: JSON.stringify({ msg: 'THIS WAS NOT A POST REQUEST' })
+      body: JSON.stringify({ msg: 'THIS WAS NOT A POST REQUEST' }),
     };
   }
 
