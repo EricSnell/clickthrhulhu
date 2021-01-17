@@ -8,7 +8,7 @@ import appConfig from './app-config.mjs';
 import testInput from './testInput.mjs';
 
 (() => {
-  let testing = false;
+  let testing = true;
 
   const ClickthrhulhuApp = {
     codeMirrorConfig,

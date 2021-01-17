@@ -4,7 +4,7 @@
   "description": "",
   "main": "dist/script",
   "scripts": {
-    "build": "parcel index.html"
+    "start": "sass assets/scss/main.scss assets/css/style.css"
   },
   "repository": {
     "type": "git",
