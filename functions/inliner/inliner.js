@@ -1,7 +1,7 @@
 const fetch = require('node-fetch');
 
 const CM_API_ENDPOINT = 'https://www.campaignmonitor.com/marketing-includes/forms/inliner/';
-const LT_API_ENDPOINT = '';
+const LT_API_ENDPOINT = 'https://putsmail.com/inliner';
 
 // Docs on event and context https://www.netlify.com/docs/functions/#the-handler-method
 exports.handler = async (event, context) => {
@@ -24,6 +24,8 @@ exports.handler = async (event, context) => {
       .then((res) => {
         if (res.status == 403) {
           throw (new Error('Campaign Monitor Authorization Error'));
+        } else if (res.status >= 500 && res.status < 600) {
+          throw (new Error('Campaign Monitor is down'))
         } else {
           return res.json();
         }
