@@ -20,7 +20,7 @@ body {
   box-sizing: inherit;
 }
 
-#container {
+#app-container {
   max-width: 1000px;
   min-width: 300px;
   margin: 0 auto;
@@ -31,7 +31,7 @@ header {
   margin-bottom: 25px;
 }
 
-#logo-container {
+.logo-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -42,13 +42,14 @@ header {
   overflow: hidden;
 }
 
-.cthulhu {
+.cthulhu-logo--large {
   position: relative;
-  width: 100%;
+  width: 200px;
   z-index: 100;
+  border: 1px solid red;
 }
 
-h1 {
+.header__headline {
   text-align: center;
   font-family: "Happy Monkey", cursive;
   color: #eee;

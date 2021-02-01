@@ -49,7 +49,7 @@ import testInput from './testInput.mjs';
       this.$options = document.getElementById('options-inner');
       this.$barcodes = document.getElementById('barcodes-dropdown');
       this.$vars = document.getElementById('variables-input');
-      this.$logo = Array.from(document.getElementsByClassName('cthulhu'));
+      this.$logo = Array.from(document.getElementsByClassName('cthulhu-logo--large'));
       this.$form = document.getElementById('code-form');
       // this.$trackingParamsList = document.getElementById('settings-menu_trackinglist');
       // this.$trackingInput = document.getElementById('settings-menu_trackinginput');
