@@ -8,7 +8,7 @@ import appConfig from './app-config.mjs';
 import testInput from './testInput.mjs';
 
 (() => {
-  let testing = false;
+  let testing = true;
 
   const ClickthrhulhuApp = {
     codeMirrorConfig,
@@ -396,6 +396,7 @@ import testInput from './testInput.mjs';
     async inlineCSS(html) {
       let url = '/inliner';
       let res = await fetch(url, { method: 'POST', body: html });
+      console.log(res);
       let json = await res.text();
       return JSON.parse(json).HTML;
     },
