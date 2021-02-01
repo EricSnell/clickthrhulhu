@@ -231,8 +231,13 @@ import testInput from './testInput.mjs';
         this.find('Btm_Nav_Coupon', clickthroughs, true, this.update.bind(this));
       }
 
-      html = await this.inlineCSS(doc.documentElement.outerHTML);
-      return this.addEntities(html);
+      try {
+        html = await this.inlineCSS(doc.documentElement.outerHTML);
+        return this.addEntities(html);
+      } catch (err) {
+        alert(err);
+        return this.addEntities(doc.documentElement.outerHTML);
+      }
     },
 
     getLinkCategory(url) {
@@ -396,7 +401,9 @@ import testInput from './testInput.mjs';
     async inlineCSS(html) {
       let url = '/inliner';
       let res = await fetch(url, { method: 'POST', body: html });
-      console.log(res);
+      if (res.status === 403) {
+        throw (new Error('Uh oh...Campaign Monitor Inliner Blocking Access'));
+      }
       let json = await res.text();
       return JSON.parse(json).HTML;
     },
