@@ -23,7 +23,7 @@
     "nodemon": "^1.19.4"
   },
   "dependencies": {
-    "codemirror": "^5.49.2",
+    "codemirror": "^5.58.2",
     "netlify-cli": "^2.40.0",
     "netlify-lambda": "^1.6.3",
     "node-fetch": "^2.6.0",
